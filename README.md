@@ -59,14 +59,20 @@ export default tseslint.config({
 
 Tecnologias:
 
-- Vite
+- Vite (corre e faz o build do projecto - package manager - hot refresh)
   - npm create vite@latest (criar o projeto React)
   - name
   - framework: React
   - variant: Typescript + SWC
-- React
--
+- React (framework de frontend)
 
 npm install (instalar dependências - react, vite, typescript, eslint, etc.)
 
 npm run dev (corre a aplicação - no package.json tem dev = vite - então corre o vite)
+
+- Tailwind (https://tailwindcss.com/docs/installation/using-vite) - permite usar classes CSS pré-feitas para aplicar estilos diretamente num componente, sem ter que utilizar ficheiros CSS
+- TanStack Router (https://tanstack.com/router/latest/docs/framework/react/installation) - faz o mapeamento das rotas
+- shadcn/ui (https://ui.shadcn.com/docs/installation/vite) - biblioteca de componentes (+flexivel)
+  - a partir do ponto 3.
+  - legacy-peer-deps (por estar a usar react 19)
+  - npx shadcn@latest add button (por exemplo para gerar o componente button a partir do shadcn)
