@@ -57,6 +57,12 @@ export default tseslint.config({
 
 # projeto-final-infoweb
 
+Como fazer commit:
+
+1. git add . (o ponto final é para os ficheiros alterados)
+2. git commit -m "mensagem"
+3. git push
+
 Tecnologias:
 
 - Vite (corre e faz o build do projecto - package manager - hot refresh)
