@@ -82,3 +82,9 @@ npm run dev (corre a aplicação - no package.json tem dev = vite - então corre
   - a partir do ponto 3.
   - legacy-peer-deps (por estar a usar react 19)
   - npx shadcn@latest add button (por exemplo para gerar o componente button a partir do shadcn)
+
+---
+
+## Generate Supabase types
+
+- npx supabase gen types typescript --project-id "gvapmwolwbmpcrfpnjeq" --schema public > database.types.ts;

@@ -1,3 +1,5 @@
+import { Login } from "@/components/Login";
+import { Logout } from "@/components/Logout";
 import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -12,6 +14,8 @@ function Index() {
 			<Button variant='default' type='submit'>
 				Thanks
 			</Button>
+			<Login />
+			<Logout />
 		</div>
 	);
 }
