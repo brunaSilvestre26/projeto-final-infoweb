@@ -11,12 +11,33 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SourcesImport } from './routes/sources'
+import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthedImport } from './routes/_authed'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthedProfileImport } from './routes/_authed/profile'
+import { Route as AuthedAdminIndexImport } from './routes/_authed/admin/index'
+import { Route as AuthedAdminSourcesImport } from './routes/_authed/admin/sources'
+import { Route as AuthedAdminSettingsImport } from './routes/_authed/admin/settings'
+import { Route as AuthedAdminManageImport } from './routes/_authed/admin/manage'
+import { Route as AuthedAdminCreateImport } from './routes/_authed/admin/create'
+import { Route as AuthedAdminCategoriesImport } from './routes/_authed/admin/categories'
+import { Route as AuthedAdminAccountsImport } from './routes/_authed/admin/accounts'
 
 // Create/Update Routes
+
+const SourcesRoute = SourcesImport.update({
+  id: '/sources',
+  path: '/sources',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AboutRoute = AboutImport.update({
   id: '/about',
@@ -38,6 +59,48 @@ const IndexRoute = IndexImport.update({
 const AuthedProfileRoute = AuthedProfileImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminIndexRoute = AuthedAdminIndexImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminSourcesRoute = AuthedAdminSourcesImport.update({
+  id: '/admin/sources',
+  path: '/admin/sources',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminSettingsRoute = AuthedAdminSettingsImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminManageRoute = AuthedAdminManageImport.update({
+  id: '/admin/manage',
+  path: '/admin/manage',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminCreateRoute = AuthedAdminCreateImport.update({
+  id: '/admin/create',
+  path: '/admin/create',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminCategoriesRoute = AuthedAdminCategoriesImport.update({
+  id: '/admin/categories',
+  path: '/admin/categories',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminAccountsRoute = AuthedAdminAccountsImport.update({
+  id: '/admin/accounts',
+  path: '/admin/accounts',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -66,11 +129,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/sources': {
+      id: '/sources'
+      path: '/sources'
+      fullPath: '/sources'
+      preLoaderRoute: typeof SourcesImport
+      parentRoute: typeof rootRoute
+    }
     '/_authed/profile': {
       id: '/_authed/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthedProfileImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/admin/accounts': {
+      id: '/_authed/admin/accounts'
+      path: '/admin/accounts'
+      fullPath: '/admin/accounts'
+      preLoaderRoute: typeof AuthedAdminAccountsImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/admin/categories': {
+      id: '/_authed/admin/categories'
+      path: '/admin/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AuthedAdminCategoriesImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/admin/create': {
+      id: '/_authed/admin/create'
+      path: '/admin/create'
+      fullPath: '/admin/create'
+      preLoaderRoute: typeof AuthedAdminCreateImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/admin/manage': {
+      id: '/_authed/admin/manage'
+      path: '/admin/manage'
+      fullPath: '/admin/manage'
+      preLoaderRoute: typeof AuthedAdminManageImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/admin/settings': {
+      id: '/_authed/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthedAdminSettingsImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/admin/sources': {
+      id: '/_authed/admin/sources'
+      path: '/admin/sources'
+      fullPath: '/admin/sources'
+      preLoaderRoute: typeof AuthedAdminSourcesImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/admin/': {
+      id: '/_authed/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthedAdminIndexImport
       parentRoute: typeof AuthedImport
     }
   }
@@ -80,10 +206,24 @@ declare module '@tanstack/react-router' {
 
 interface AuthedRouteChildren {
   AuthedProfileRoute: typeof AuthedProfileRoute
+  AuthedAdminAccountsRoute: typeof AuthedAdminAccountsRoute
+  AuthedAdminCategoriesRoute: typeof AuthedAdminCategoriesRoute
+  AuthedAdminCreateRoute: typeof AuthedAdminCreateRoute
+  AuthedAdminManageRoute: typeof AuthedAdminManageRoute
+  AuthedAdminSettingsRoute: typeof AuthedAdminSettingsRoute
+  AuthedAdminSourcesRoute: typeof AuthedAdminSourcesRoute
+  AuthedAdminIndexRoute: typeof AuthedAdminIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedProfileRoute: AuthedProfileRoute,
+  AuthedAdminAccountsRoute: AuthedAdminAccountsRoute,
+  AuthedAdminCategoriesRoute: AuthedAdminCategoriesRoute,
+  AuthedAdminCreateRoute: AuthedAdminCreateRoute,
+  AuthedAdminManageRoute: AuthedAdminManageRoute,
+  AuthedAdminSettingsRoute: AuthedAdminSettingsRoute,
+  AuthedAdminSourcesRoute: AuthedAdminSourcesRoute,
+  AuthedAdminIndexRoute: AuthedAdminIndexRoute,
 }
 
 const AuthedRouteWithChildren =
@@ -93,14 +233,32 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
+  '/admin/accounts': typeof AuthedAdminAccountsRoute
+  '/admin/categories': typeof AuthedAdminCategoriesRoute
+  '/admin/create': typeof AuthedAdminCreateRoute
+  '/admin/manage': typeof AuthedAdminManageRoute
+  '/admin/settings': typeof AuthedAdminSettingsRoute
+  '/admin/sources': typeof AuthedAdminSourcesRoute
+  '/admin': typeof AuthedAdminIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
+  '/admin/accounts': typeof AuthedAdminAccountsRoute
+  '/admin/categories': typeof AuthedAdminCategoriesRoute
+  '/admin/create': typeof AuthedAdminCreateRoute
+  '/admin/manage': typeof AuthedAdminManageRoute
+  '/admin/settings': typeof AuthedAdminSettingsRoute
+  '/admin/sources': typeof AuthedAdminSourcesRoute
+  '/admin': typeof AuthedAdminIndexRoute
 }
 
 export interface FileRoutesById {
@@ -108,15 +266,64 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/sources': typeof SourcesRoute
   '/_authed/profile': typeof AuthedProfileRoute
+  '/_authed/admin/accounts': typeof AuthedAdminAccountsRoute
+  '/_authed/admin/categories': typeof AuthedAdminCategoriesRoute
+  '/_authed/admin/create': typeof AuthedAdminCreateRoute
+  '/_authed/admin/manage': typeof AuthedAdminManageRoute
+  '/_authed/admin/settings': typeof AuthedAdminSettingsRoute
+  '/_authed/admin/sources': typeof AuthedAdminSourcesRoute
+  '/_authed/admin/': typeof AuthedAdminIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/about' | '/profile'
+  fullPaths:
+    | '/'
+    | ''
+    | '/about'
+    | '/login'
+    | '/sources'
+    | '/profile'
+    | '/admin/accounts'
+    | '/admin/categories'
+    | '/admin/create'
+    | '/admin/manage'
+    | '/admin/settings'
+    | '/admin/sources'
+    | '/admin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/about' | '/profile'
-  id: '__root__' | '/' | '/_authed' | '/about' | '/_authed/profile'
+  to:
+    | '/'
+    | ''
+    | '/about'
+    | '/login'
+    | '/sources'
+    | '/profile'
+    | '/admin/accounts'
+    | '/admin/categories'
+    | '/admin/create'
+    | '/admin/manage'
+    | '/admin/settings'
+    | '/admin/sources'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authed'
+    | '/about'
+    | '/login'
+    | '/sources'
+    | '/_authed/profile'
+    | '/_authed/admin/accounts'
+    | '/_authed/admin/categories'
+    | '/_authed/admin/create'
+    | '/_authed/admin/manage'
+    | '/_authed/admin/settings'
+    | '/_authed/admin/sources'
+    | '/_authed/admin/'
   fileRoutesById: FileRoutesById
 }
 
@@ -124,12 +331,16 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
   AboutRoute: typeof AboutRoute
+  LoginRoute: typeof LoginRoute
+  SourcesRoute: typeof SourcesRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
   AboutRoute: AboutRoute,
+  LoginRoute: LoginRoute,
+  SourcesRoute: SourcesRoute,
 }
 
 export const routeTree = rootRoute
@@ -144,7 +355,9 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_authed",
-        "/about"
+        "/about",
+        "/login",
+        "/sources"
       ]
     },
     "/": {
@@ -153,14 +366,55 @@ export const routeTree = rootRoute
     "/_authed": {
       "filePath": "_authed.tsx",
       "children": [
-        "/_authed/profile"
+        "/_authed/profile",
+        "/_authed/admin/accounts",
+        "/_authed/admin/categories",
+        "/_authed/admin/create",
+        "/_authed/admin/manage",
+        "/_authed/admin/settings",
+        "/_authed/admin/sources",
+        "/_authed/admin/"
       ]
     },
     "/about": {
       "filePath": "about.tsx"
     },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/sources": {
+      "filePath": "sources.tsx"
+    },
     "/_authed/profile": {
       "filePath": "_authed/profile.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/accounts": {
+      "filePath": "_authed/admin/accounts.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/categories": {
+      "filePath": "_authed/admin/categories.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/create": {
+      "filePath": "_authed/admin/create.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/manage": {
+      "filePath": "_authed/admin/manage.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/settings": {
+      "filePath": "_authed/admin/settings.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/sources": {
+      "filePath": "_authed/admin/sources.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/": {
+      "filePath": "_authed/admin/index.tsx",
       "parent": "/_authed"
     }
   }

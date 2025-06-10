@@ -4,25 +4,28 @@ import { supabase } from "@/supabase/supabase";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
-export const Login = () => {
+export const Signup = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	async function signInWithEmail() {
-		await supabase.auth.signInWithPassword({
+	async function signUpNewUser() {
+		await supabase.auth.signUp({
 			email: email,
 			password: password,
+			options: {
+				emailRedirectTo: "http://localhost:5173/",
+			},
 		});
 	}
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		signInWithEmail();
+		signUpNewUser();
 	};
 
 	return (
 		<div className='p-4 max-w-sm mx-auto border rounded shadow'>
-			<h2 className='text-xl font-bold mb-4'>Login</h2>
+			<h2 className='text-xl font-bold mb-4'>Registar</h2>
 			<form onSubmit={handleSubmit}>
 				<div className='mb-4'>
 					<Label htmlFor='email' className='block text-sm font-medium mb-1'>
@@ -36,7 +39,7 @@ export const Login = () => {
 				</div>
 
 				<Button variant='default' type='submit'>
-					Entrar
+					Registar
 				</Button>
 			</form>
 		</div>
