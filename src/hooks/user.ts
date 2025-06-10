@@ -15,7 +15,17 @@ export const useGetRoleByIdQuery = (id:string) => {
   })
 }
 
+export const useGetUserQuery = () => {
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: getUser,
+  })
+}
 
+export const getUser = async () => {
+  const { data } = await supabase.auth.getUser();
+  return data.user;
+}
 
 export const getUserById = async (id:string) => {
   const { data } = await supabase.from("user").select("*").eq("id",id).single();

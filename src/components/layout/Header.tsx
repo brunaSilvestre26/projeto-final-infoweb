@@ -1,7 +1,8 @@
 import { Input } from '@/components/ui/input'
-import { useGetUserQuery } from '@/hooks/useGetUser'
-import { Link } from '@tanstack/react-router'
-import { Newspaper, Search, Settings, User } from 'lucide-react'
+import { useGetUserQuery } from '@/hooks/user'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { FileCog, Newspaper, Search, User } from 'lucide-react'
+import { Button } from '../ui/button'
 
 interface HeaderProps {
   onSearchChange: (query: string) => void
@@ -12,7 +13,7 @@ interface HeaderProps {
 
 export function Header({ onSearchChange, searchQuery }: HeaderProps) {
   const user = useGetUserQuery()
-  console.log('🚀 ~ Header ~ user:', user.data)
+  const navigate = useNavigate()
   return (
     <header className="bg-background border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,9 +41,10 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
           {/* Actions */}
           <div className="flex items-center space-x-4">
             {user.data && (
-              <Link to="/admin">
-                <Settings className="h-5 w-5" />
-              </Link>
+              <Button variant="secondary" onClick={() => navigate({ to: '/admin' })}>
+                <FileCog className="h-5 w-5" />
+                Backoffice
+              </Button>
             )}
 
             <Link to="/login">

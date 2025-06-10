@@ -2,7 +2,15 @@ import { Button } from '@/components/ui/button'
 import { Link, useLocation } from '@tanstack/react-router'
 import { Globe, Home } from 'lucide-react'
 import { categories } from '../../data/mockData'
-import { Category } from '../../types'
+
+// TODO: tipo temporario, para apagar depois
+export interface Category {
+  id: string
+  name: string
+  slug: string
+  description: string
+  color: string
+}
 
 export function PublicSidebar() {
   const location = useLocation()
