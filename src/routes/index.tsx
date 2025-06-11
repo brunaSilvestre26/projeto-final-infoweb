@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { sampleArticles } from '@/data/mockData'
+import { useGetApprovedArticles } from '@/hooks/articles'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -7,8 +7,8 @@ export const Route = createFileRoute('/')({
 })
 
 function Index() {
-  // const articles = useGetApprovedArticles()
-  const articles = sampleArticles
+  const articles = useGetApprovedArticles()
+  // const articles = sampleArticles
 
   /*   if (articles.isLoading) return <div>Loading...</div>
   if (articles.isError) return <div>Erro ao carregar artigos.</div>
@@ -16,7 +16,7 @@ function Index() {
 
   return (
     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {articles.data.map((article) => (
+      {articles.data?.map((article) => (
         <Card key={article.id}>
           <CardHeader>
             <CardTitle>{article.title}</CardTitle>

@@ -1,5 +1,5 @@
 import { useLocation } from '@tanstack/react-router'
-import { BackofficeSidebar } from './BackOfficeSidebar'
+import { BackofficeSidebar } from './BackofficeSidebar'
 import { PublicSidebar } from './PublicSidebar'
 
 export function Sidebar() {

@@ -1,6 +1,7 @@
 import { Header } from '@/components/layout/Header'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { Sidebar } from '@/components/layout/Sidebar'
+import { Toaster } from '@/components/ui/sonner'
 import isAuthenticated from '@/hooks/isAutheticated'
 import { getUser, getUserById } from '@/hooks/user'
 import { QueryClient } from '@tanstack/react-query'
@@ -32,6 +33,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           <PageLayout />
         </div>
       </div>
+      <Toaster position="top-center" />
       <TanStackRouterDevtools />
     </div>
   ),

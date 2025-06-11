@@ -1,3 +1,4 @@
+import { ArticleForm } from '@/components/ArticleForm'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authed/admin/create')({
@@ -5,5 +6,9 @@ export const Route = createFileRoute('/_authed/admin/create')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/_authed/admin/create"!</div>
+  return (
+    <div className="p-4 w-[700px] mx-auto border rounded shadow">
+      <ArticleForm />
+    </div>
+  )
 }

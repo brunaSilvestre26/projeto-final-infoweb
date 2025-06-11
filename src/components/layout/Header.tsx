@@ -46,10 +46,15 @@ export function Header({ onSearchChange, searchQuery }: HeaderProps) {
                 Backoffice
               </Button>
             )}
-
-            <Link to="/login">
-              <User className="h-5 w-5" />
-            </Link>
+            {user.data ? (
+              <Link to="/logout">
+                <User className="h-5 w-5" />
+              </Link>
+            ) : (
+              <Link to="/login">
+                <User className="h-5 w-5" />
+              </Link>
+            )}
           </div>
         </div>
       </div>
