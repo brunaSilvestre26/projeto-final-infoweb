@@ -1,6 +1,3 @@
-Need to install the following packages:
-supabase@2.22.6
-Ok to proceed? (y) 
 export type Json =
   | string
   | number
@@ -27,7 +24,7 @@ export type Database = {
         Insert: {
           content?: string | null
           created_at?: string | null
-          id: string
+          id?: string
           is_approved?: boolean | null
           source_id?: string | null
           summary?: string | null
@@ -141,7 +138,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          id: string
+          id?: string
           name: string
           updated_at?: string | null
           user_id?: string | null
@@ -163,6 +160,47 @@ export type Database = {
           },
         ]
       }
+      image: {
+        Row: {
+          article_id: string | null
+          caption: string | null
+          created_at: string | null
+          id: string
+          order_index: number | null
+          storage_path: string
+          type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          article_id?: string | null
+          caption?: string | null
+          created_at?: string | null
+          id?: string
+          order_index?: number | null
+          storage_path: string
+          type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          article_id?: string | null
+          caption?: string | null
+          created_at?: string | null
+          id?: string
+          order_index?: number | null
+          storage_path?: string
+          type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "image_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "article"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role: {
         Row: {
           created_at: string | null
@@ -174,7 +212,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           description?: string | null
-          id: string
+          id?: string
           name?: string | null
           updated_at?: string | null
         }
@@ -198,7 +236,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          id: string
+          id?: string
           name?: string | null
           type?: string | null
           updated_at?: string | null
@@ -218,19 +256,19 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
-          name: string | null
+          name: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          id: string
-          name?: string | null
+          id?: string
+          name: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
-          name?: string | null
+          name?: string
           updated_at?: string | null
         }
         Relationships: []

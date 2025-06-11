@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SourcesImport } from './routes/sources'
+import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthedImport } from './routes/_authed'
@@ -30,6 +31,12 @@ import { Route as AuthedAdminAccountsImport } from './routes/_authed/admin/accou
 const SourcesRoute = SourcesImport.update({
   id: '/sources',
   path: '/sources',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LogoutRoute = LogoutImport.update({
+  id: '/logout',
+  path: '/logout',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -136,6 +143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/logout': {
+      id: '/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof LogoutImport
+      parentRoute: typeof rootRoute
+    }
     '/sources': {
       id: '/sources'
       path: '/sources'
@@ -234,6 +248,7 @@ export interface FileRoutesByFullPath {
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
   '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
   '/admin/accounts': typeof AuthedAdminAccountsRoute
@@ -250,6 +265,7 @@ export interface FileRoutesByTo {
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
   '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
   '/admin/accounts': typeof AuthedAdminAccountsRoute
@@ -267,6 +283,7 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
   '/sources': typeof SourcesRoute
   '/_authed/profile': typeof AuthedProfileRoute
   '/_authed/admin/accounts': typeof AuthedAdminAccountsRoute
@@ -285,6 +302,7 @@ export interface FileRouteTypes {
     | ''
     | '/about'
     | '/login'
+    | '/logout'
     | '/sources'
     | '/profile'
     | '/admin/accounts'
@@ -300,6 +318,7 @@ export interface FileRouteTypes {
     | ''
     | '/about'
     | '/login'
+    | '/logout'
     | '/sources'
     | '/profile'
     | '/admin/accounts'
@@ -315,6 +334,7 @@ export interface FileRouteTypes {
     | '/_authed'
     | '/about'
     | '/login'
+    | '/logout'
     | '/sources'
     | '/_authed/profile'
     | '/_authed/admin/accounts'
@@ -332,6 +352,7 @@ export interface RootRouteChildren {
   AuthedRoute: typeof AuthedRouteWithChildren
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
+  LogoutRoute: typeof LogoutRoute
   SourcesRoute: typeof SourcesRoute
 }
 
@@ -340,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthedRoute: AuthedRouteWithChildren,
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
+  LogoutRoute: LogoutRoute,
   SourcesRoute: SourcesRoute,
 }
 
@@ -357,6 +379,7 @@ export const routeTree = rootRoute
         "/_authed",
         "/about",
         "/login",
+        "/logout",
         "/sources"
       ]
     },
@@ -381,6 +404,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/logout": {
+      "filePath": "logout.tsx"
     },
     "/sources": {
       "filePath": "sources.tsx"
