@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useLocation } from '@tanstack/react-router'
 import { Globe, Home } from 'lucide-react'
 
-type Category = {
+type Tag = {
   id: string
   name: string
   slug: string
@@ -26,11 +26,11 @@ export function PublicSidebar() {
     queryFn: async () => {
       const { data, error } = await supabase.from('tag').select('id, name')
       if (error) throw error
-      return data.map((cat, idx) => ({
-        id: cat.id,
-        name: cat.name,
-        slug: cat.name.toLowerCase().replace(/\s+/g, '-'),
-        color: blueShades[idx % blueShades.length],
+      return data.map((tag, index) => ({
+        id: tag.id,
+        name: tag.name,
+        slug: tag.name.toLowerCase().replace(/\s+/g, '-'),
+        color: blueShades[index % blueShades.length],
       }))
     },
   })
@@ -57,16 +57,16 @@ export function PublicSidebar() {
         })}
       </>
       <div>
-        <h3 className="text-sm font-semibold text-foreground mb-3 mt-4">Categorias</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-3 mt-4">Tags</h3>
         <div className="space-y-1">
-          {categories.map((category: Category) => (
-            <Link key={category.id} to="" href={`/category/${category.slug}`}>
+          {categories.map((tag: Tag) => (
+            <Link key={tag.id} to="" href={`/tag/${tag.slug}`}>
               <Button
-                variant={location.pathname === `/category/${category.slug}` ? 'secondary' : 'ghost'}
+                variant={location.pathname === `/tag/${tag.slug}` ? 'secondary' : 'ghost'}
                 className="w-full justify-start"
               >
-                <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: category.color }} />
-                {category.name}
+                <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: tag.color }} />
+                {tag.name}
               </Button>
             </Link>
           ))}

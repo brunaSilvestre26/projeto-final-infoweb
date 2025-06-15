@@ -16,7 +16,9 @@ import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthedImport } from './routes/_authed'
+import { Route as ArticleIdImport } from './routes/$articleId'
 import { Route as IndexImport } from './routes/index'
+import { Route as TagTagNameImport } from './routes/tag/$tagName'
 import { Route as AuthedProfileImport } from './routes/_authed/profile'
 import { Route as AuthedAdminIndexImport } from './routes/_authed/admin/index'
 import { Route as AuthedAdminSourcesImport } from './routes/_authed/admin/sources'
@@ -57,9 +59,21 @@ const AuthedRoute = AuthedImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ArticleIdRoute = ArticleIdImport.update({
+  id: '/$articleId',
+  path: '/$articleId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TagTagNameRoute = TagTagNameImport.update({
+  id: '/tag/$tagName',
+  path: '/tag/$tagName',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -122,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/$articleId': {
+      id: '/$articleId'
+      path: '/$articleId'
+      fullPath: '/$articleId'
+      preLoaderRoute: typeof ArticleIdImport
+      parentRoute: typeof rootRoute
+    }
     '/_authed': {
       id: '/_authed'
       path: ''
@@ -163,6 +184,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile'
       preLoaderRoute: typeof AuthedProfileImport
       parentRoute: typeof AuthedImport
+    }
+    '/tag/$tagName': {
+      id: '/tag/$tagName'
+      path: '/tag/$tagName'
+      fullPath: '/tag/$tagName'
+      preLoaderRoute: typeof TagTagNameImport
+      parentRoute: typeof rootRoute
     }
     '/_authed/admin/accounts': {
       id: '/_authed/admin/accounts'
@@ -245,12 +273,14 @@ const AuthedRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$articleId': typeof ArticleIdRoute
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
+  '/tag/$tagName': typeof TagTagNameRoute
   '/admin/accounts': typeof AuthedAdminAccountsRoute
   '/admin/categories': typeof AuthedAdminCategoriesRoute
   '/admin/create': typeof AuthedAdminCreateRoute
@@ -262,12 +292,14 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$articleId': typeof ArticleIdRoute
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
+  '/tag/$tagName': typeof TagTagNameRoute
   '/admin/accounts': typeof AuthedAdminAccountsRoute
   '/admin/categories': typeof AuthedAdminCategoriesRoute
   '/admin/create': typeof AuthedAdminCreateRoute
@@ -280,12 +312,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/$articleId': typeof ArticleIdRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/sources': typeof SourcesRoute
   '/_authed/profile': typeof AuthedProfileRoute
+  '/tag/$tagName': typeof TagTagNameRoute
   '/_authed/admin/accounts': typeof AuthedAdminAccountsRoute
   '/_authed/admin/categories': typeof AuthedAdminCategoriesRoute
   '/_authed/admin/create': typeof AuthedAdminCreateRoute
@@ -299,12 +333,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$articleId'
     | ''
     | '/about'
     | '/login'
     | '/logout'
     | '/sources'
     | '/profile'
+    | '/tag/$tagName'
     | '/admin/accounts'
     | '/admin/categories'
     | '/admin/create'
@@ -315,12 +351,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$articleId'
     | ''
     | '/about'
     | '/login'
     | '/logout'
     | '/sources'
     | '/profile'
+    | '/tag/$tagName'
     | '/admin/accounts'
     | '/admin/categories'
     | '/admin/create'
@@ -331,12 +369,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$articleId'
     | '/_authed'
     | '/about'
     | '/login'
     | '/logout'
     | '/sources'
     | '/_authed/profile'
+    | '/tag/$tagName'
     | '/_authed/admin/accounts'
     | '/_authed/admin/categories'
     | '/_authed/admin/create'
@@ -349,20 +389,24 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArticleIdRoute: typeof ArticleIdRoute
   AuthedRoute: typeof AuthedRouteWithChildren
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
   SourcesRoute: typeof SourcesRoute
+  TagTagNameRoute: typeof TagTagNameRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArticleIdRoute: ArticleIdRoute,
   AuthedRoute: AuthedRouteWithChildren,
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
   SourcesRoute: SourcesRoute,
+  TagTagNameRoute: TagTagNameRoute,
 }
 
 export const routeTree = rootRoute
@@ -376,15 +420,20 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/$articleId",
         "/_authed",
         "/about",
         "/login",
         "/logout",
-        "/sources"
+        "/sources",
+        "/tag/$tagName"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/$articleId": {
+      "filePath": "$articleId.tsx"
     },
     "/_authed": {
       "filePath": "_authed.tsx",
@@ -414,6 +463,9 @@ export const routeTree = rootRoute
     "/_authed/profile": {
       "filePath": "_authed/profile.tsx",
       "parent": "/_authed"
+    },
+    "/tag/$tagName": {
+      "filePath": "tag/$tagName.tsx"
     },
     "/_authed/admin/accounts": {
       "filePath": "_authed/admin/accounts.tsx",

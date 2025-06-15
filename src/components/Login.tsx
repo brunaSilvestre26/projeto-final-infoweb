@@ -18,7 +18,6 @@ export const Login = () => {
       email: email,
       password: password,
     })
-    console.log('🚀 ~ signInWithEmail ~ response:', response)
     return response
   }
 

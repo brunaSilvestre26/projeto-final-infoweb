@@ -14,6 +14,7 @@ export type Database = {
           content: string | null
           created_at: string | null
           id: string
+          image_url: string | null
           is_approved: boolean | null
           source_id: string | null
           summary: string | null
@@ -25,6 +26,7 @@ export type Database = {
           content?: string | null
           created_at?: string | null
           id?: string
+          image_url?: string | null
           is_approved?: boolean | null
           source_id?: string | null
           summary?: string | null
@@ -36,6 +38,7 @@ export type Database = {
           content?: string | null
           created_at?: string | null
           id?: string
+          image_url?: string | null
           is_approved?: boolean | null
           source_id?: string | null
           summary?: string | null
@@ -156,47 +159,6 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      image: {
-        Row: {
-          article_id: string | null
-          caption: string | null
-          created_at: string | null
-          id: string
-          order_index: number | null
-          storage_path: string
-          type: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          article_id?: string | null
-          caption?: string | null
-          created_at?: string | null
-          id?: string
-          order_index?: number | null
-          storage_path: string
-          type?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          article_id?: string | null
-          caption?: string | null
-          created_at?: string | null
-          id?: string
-          order_index?: number | null
-          storage_path?: string
-          type?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "image_article_id_fkey"
-            columns: ["article_id"]
-            isOneToOne: false
-            referencedRelation: "article"
             referencedColumns: ["id"]
           },
         ]

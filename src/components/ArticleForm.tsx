@@ -289,7 +289,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
               )}
               {formData.tags.length > 0 && (
                 <div className="mt-6 pt-6 border-t border-border">
-                  <h3 className="text-sm font-semibold mb-3">Categorias</h3>
+                  <h3 className="text-sm font-semibold mb-3">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {formData.tags.map((tag) => (
                       <Badge key={tag.id} variant="secondary">
@@ -388,7 +388,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
                 {/* Tags Section */}
                 <div className="lg:col-span-2">
-                  <Label>Categorias *</Label>
+                  <Label>Tags *</Label>
                   <div className="space-y-3">
                     <div className="flex space-x-2">
                       <Select
