@@ -7,7 +7,7 @@ export const Route = createFileRoute('/_authed/admin/create')({
 
 function RouteComponent() {
   return (
-    <div className="p-4 w-[700px] mx-auto border rounded shadow">
+    <div className="p-4 w-[700px] mx-auto">
       <ArticleForm />
     </div>
   )

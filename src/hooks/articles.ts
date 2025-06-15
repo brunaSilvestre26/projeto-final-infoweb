@@ -42,7 +42,7 @@ export const getApprovedArticles = async () => {
 
   const tagsResponse = await supabase
     .from('tag')
-    .select('name, id')
+    .select('name, slug, id')
     .in('id', articlesResponse.data?.flatMap((article) => article.article_tags.map((tag) => tag.tag_id))!)
 
   const authorsResponse = await supabase
@@ -52,6 +52,7 @@ export const getApprovedArticles = async () => {
 
   // Mapear ids para nomes
   const tagsMap = Object.fromEntries((tagsResponse.data ?? []).map((tag) => [tag.id, tag.name]))
+  const tagsSlugMap = Object.fromEntries((tagsResponse.data ?? []).map((tag) => [tag.id, tag.slug]))
   const authorsMap = Object.fromEntries((authorsResponse.data ?? []).map((author) => [author.id, author.name]))
 
   // Montar resultado final
@@ -59,6 +60,7 @@ export const getApprovedArticles = async () => {
     ...article,
     article_tags: (article.article_tags ?? []).map((tag) => ({
       tag_id: tag.tag_id,
+      slug: tagsSlugMap[tag.tag_id] || null,
       name: tagsMap[tag.tag_id] || null,
     })),
     article_authors: (article.article_authors ?? []).map((author) => ({

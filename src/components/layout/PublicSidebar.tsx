@@ -24,12 +24,12 @@ export function PublicSidebar() {
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('tag').select('id, name')
+      const { data, error } = await supabase.from('tag').select('id, name, slug')
       if (error) throw error
       return data.map((tag, index) => ({
         id: tag.id,
         name: tag.name,
-        slug: tag.name.toLowerCase().replace(/\s+/g, '-'),
+        slug: tag.slug /* tag.name.toLowerCase().replace(/\s+/g, '-') */,
         color: blueShades[index % blueShades.length],
       }))
     },

@@ -14,7 +14,7 @@ function RouteComponent() {
   if (article.isError || !article.data) return <div>Artigo não encontrado.</div>
 
   return (
-    <div className="flex justify-center mt-8 max-w-4xl w-full">
+    <div className="flex justify-center max-w-4xl w-full">
       <Card className="p-0 overflow-hidden w-full">
         {article.data.image_url && (
           <div className="aspect-21/9 overflow-hidden mb-4">
