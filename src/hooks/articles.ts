@@ -39,6 +39,7 @@ export const getApprovedArticles = async () => {
       `
     )
     .eq('is_approved', true)
+    .order('created_at', { ascending: false })
 
   const tagsResponse = await supabase
     .from('tag')

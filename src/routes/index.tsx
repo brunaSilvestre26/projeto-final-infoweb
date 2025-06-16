@@ -7,6 +7,9 @@ export const Route = createFileRoute('/')({
 })
 
 function Index() {
+  // TODO: Implement search functionality
+  // TODO: Implement pagination
+
   const articles = useGetApprovedArticles()
 
   return (
@@ -24,13 +27,13 @@ function Index() {
           )}
           <CardHeader>
             <Link to="/$articleId" params={{ articleId: article.id }}>
-              <CardTitle className="group-hover:text-primary">{article.title}</CardTitle>
+              <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
               <CardDescription>{article.summary}</CardDescription>
             </Link>
           </CardHeader>
           <CardContent>
             <div className="mb-2 text-sm text-muted-foreground">
-              Autores:{' '}
+              {article.article_authors?.length === 1 ? 'Autor' : 'Autores'}:{' '}
               {article.article_authors
                 ?.map((a) => a.name)
                 .filter(Boolean)

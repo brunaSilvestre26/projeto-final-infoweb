@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -269,14 +269,17 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       <CardContent>
         {showPreview ? (
           <div className="prose max-w-none">
-            <h1 className="text-3xl font-bold mb-4">{formData.title || 'Título vai aparecer aqui'}</h1>
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-6">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground -mt-4 mb-4">
               <span>•</span>
               <span>Estado: {formData.is_approved ? 'Aprovado' : 'Pendente'}</span>
             </div>
-            <p className="text-lg text-muted-foreground font-medium mb-6">
-              {formData.summary || 'O sumário do artigo vai aparecer aqui...'}
-            </p>
+            {formData.image_url && (
+              <img src={formData.image_url} alt={formData.title} className="w-full h-64 object-cover rounded-lg mb-6" />
+            )}
+            <h1 className="text-3xl font-bold mb-4">{formData.title || 'Título vai aparecer aqui'}</h1>
+
+            <CardDescription>{formData.summary || 'O sumário do artigo vai aparecer aqui...'}</CardDescription>
+            <p className="text-lg text-muted-foreground font-medium mb-6"></p>
             <div className="text-foreground whitespace-pre-wrap">
               {formData.content || 'O conteúdo do artigo vai aparecer aqui...'}
             </div>
