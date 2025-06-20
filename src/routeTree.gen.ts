@@ -26,6 +26,7 @@ import { Route as AuthedAdminSettingsImport } from './routes/_authed/admin/setti
 import { Route as AuthedAdminCreateImport } from './routes/_authed/admin/create'
 import { Route as AuthedAdminCategoriesImport } from './routes/_authed/admin/categories'
 import { Route as AuthedAdminAccountsImport } from './routes/_authed/admin/accounts'
+import { Route as AuthedAdminEditArticleIdImport } from './routes/_authed/admin/edit/$articleId'
 
 // Create/Update Routes
 
@@ -115,6 +116,12 @@ const AuthedAdminCategoriesRoute = AuthedAdminCategoriesImport.update({
 const AuthedAdminAccountsRoute = AuthedAdminAccountsImport.update({
   id: '/admin/accounts',
   path: '/admin/accounts',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedAdminEditArticleIdRoute = AuthedAdminEditArticleIdImport.update({
+  id: '/admin/edit/$articleId',
+  path: '/admin/edit/$articleId',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -227,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedAdminIndexImport
       parentRoute: typeof AuthedImport
     }
+    '/_authed/admin/edit/$articleId': {
+      id: '/_authed/admin/edit/$articleId'
+      path: '/admin/edit/$articleId'
+      fullPath: '/admin/edit/$articleId'
+      preLoaderRoute: typeof AuthedAdminEditArticleIdImport
+      parentRoute: typeof AuthedImport
+    }
   }
 }
 
@@ -240,6 +254,7 @@ interface AuthedRouteChildren {
   AuthedAdminSettingsRoute: typeof AuthedAdminSettingsRoute
   AuthedAdminSourcesRoute: typeof AuthedAdminSourcesRoute
   AuthedAdminIndexRoute: typeof AuthedAdminIndexRoute
+  AuthedAdminEditArticleIdRoute: typeof AuthedAdminEditArticleIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
@@ -250,6 +265,7 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedAdminSettingsRoute: AuthedAdminSettingsRoute,
   AuthedAdminSourcesRoute: AuthedAdminSourcesRoute,
   AuthedAdminIndexRoute: AuthedAdminIndexRoute,
+  AuthedAdminEditArticleIdRoute: AuthedAdminEditArticleIdRoute,
 }
 
 const AuthedRouteWithChildren =
@@ -271,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AuthedAdminSettingsRoute
   '/admin/sources': typeof AuthedAdminSourcesRoute
   '/admin': typeof AuthedAdminIndexRoute
+  '/admin/edit/$articleId': typeof AuthedAdminEditArticleIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -289,6 +306,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AuthedAdminSettingsRoute
   '/admin/sources': typeof AuthedAdminSourcesRoute
   '/admin': typeof AuthedAdminIndexRoute
+  '/admin/edit/$articleId': typeof AuthedAdminEditArticleIdRoute
 }
 
 export interface FileRoutesById {
@@ -308,6 +326,7 @@ export interface FileRoutesById {
   '/_authed/admin/settings': typeof AuthedAdminSettingsRoute
   '/_authed/admin/sources': typeof AuthedAdminSourcesRoute
   '/_authed/admin/': typeof AuthedAdminIndexRoute
+  '/_authed/admin/edit/$articleId': typeof AuthedAdminEditArticleIdRoute
 }
 
 export interface FileRouteTypes {
@@ -328,6 +347,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sources'
     | '/admin'
+    | '/admin/edit/$articleId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -345,6 +365,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/sources'
     | '/admin'
+    | '/admin/edit/$articleId'
   id:
     | '__root__'
     | '/'
@@ -362,6 +383,7 @@ export interface FileRouteTypes {
     | '/_authed/admin/settings'
     | '/_authed/admin/sources'
     | '/_authed/admin/'
+    | '/_authed/admin/edit/$articleId'
   fileRoutesById: FileRoutesById
 }
 
@@ -422,7 +444,8 @@ export const routeTree = rootRoute
         "/_authed/admin/create",
         "/_authed/admin/settings",
         "/_authed/admin/sources",
-        "/_authed/admin/"
+        "/_authed/admin/",
+        "/_authed/admin/edit/$articleId"
       ]
     },
     "/about": {
@@ -466,6 +489,10 @@ export const routeTree = rootRoute
     },
     "/_authed/admin/": {
       "filePath": "_authed/admin/index.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/admin/edit/$articleId": {
+      "filePath": "_authed/admin/edit/$articleId.tsx",
       "parent": "/_authed"
     }
   }

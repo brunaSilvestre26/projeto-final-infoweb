@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useGetArticleById } from '@/hooks/articles'
+import { useGetArticleByIdQuery } from '@/hooks/articles'
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { Clock, User } from 'lucide-react'
 
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/$articleId')({
 
 function RouteComponent() {
   const { articleId } = useParams({ from: '/$articleId' })
-  const article = useGetArticleById(articleId)
+  const article = useGetArticleByIdQuery(articleId)
 
   if (article.isLoading) return <div>A carregar...</div>
   if (article.isError || !article.data) return <div>Artigo não encontrado.</div>

@@ -5,10 +5,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { useGetArticleById } from '@/hooks/articles'
+import { useGetArticleByIdQuery } from '@/hooks/articles'
+import { useGetAuthorsQuery } from '@/hooks/authors'
+import { useGetTags } from '@/hooks/tags'
 import { supabase } from '@/supabase/supabase'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
+import { Tables } from 'database.types'
 import { Eye, EyeOff, Save, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
@@ -20,7 +23,7 @@ interface ArticleFormData {
   summary: string
   content: string
   image_url: string
-  is_approved: boolean
+  status: Tables<'article'>['status']
   authors: { id: string; name: string }[]
   tags: { id: string; name: string }[]
 }
@@ -40,7 +43,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     summary: '',
     content: '',
     image_url: '',
-    is_approved: false,
+    status: 'pending',
     authors: [],
     tags: [],
   })
@@ -48,25 +51,13 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   // Fetch authors
-  const authors = useQuery({
-    queryKey: ['authors'],
-    queryFn: async () => {
-      const { data } = await supabase.from('author').select('id, name')
-      return data
-    },
-  })
+  const authors = useGetAuthorsQuery()
 
   // Fetch tags
-  const tags = useQuery({
-    queryKey: ['tags'],
-    queryFn: async () => {
-      const { data } = await supabase.from('tag').select('id, name')
-      return data
-    },
-  })
+  const tags = useGetTags()
 
   // Fetch article for editing
-  const article = useGetArticleById(articleId || undefined)
+  const article = useGetArticleByIdQuery(articleId || undefined)
 
   // Create article mutation
   const createArticleMutation = useMutation({
@@ -79,7 +70,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           summary: data.summary,
           content: data.content,
           image_url: data.image_url === '' ? DEFAULT_IMAGE_URL : data.image_url,
-          is_approved: false,
+          status: 'pending',
         })
         .select()
         .single()
@@ -112,7 +103,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['approvedArticles'] })
-      navigate({ to: '/admin/manage' })
+      navigate({ to: '/admin' })
     },
   })
 
@@ -128,7 +119,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           title: data.title,
           summary: data.summary,
           content: data.content,
-          is_approved: false,
+          status: 'pending',
         })
         .eq('id', articleId)
 
@@ -165,7 +156,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['approvedArticles'] })
       queryClient.invalidateQueries({ queryKey: ['article', articleId] })
-      navigate({ to: '/admin/manage' })
+      navigate({ to: '/admin' })
     },
   })
 
@@ -177,7 +168,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         summary: article.data.summary || '',
         content: article.data.content || '',
         image_url: article.data.image_url || DEFAULT_IMAGE_URL,
-        is_approved: false,
+        status: 'pending',
         authors:
           article.data.article_authors?.map((author) => ({
             id: author.author_id,
@@ -217,7 +208,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   }
 
   const handleCancel = () => {
-    navigate({ to: '/admin/manage' })
+    navigate({ to: '/admin' })
   }
 
   const handleRemoveAuthor = (authorId: string) => {
@@ -271,7 +262,14 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           <div className="prose max-w-none">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground -mt-4 mb-4">
               <span>•</span>
-              <span>Estado: {formData.is_approved ? 'Aprovado' : 'Pendente'}</span>
+              <span>
+                Estado:{' '}
+                {formData.status === 'approved'
+                  ? 'Aprovado'
+                  : formData.status === 'rejected'
+                    ? 'Rejeitado'
+                    : 'Pendente'}
+              </span>
             </div>
             {formData.image_url && (
               <img src={formData.image_url} alt={formData.title} className="w-full h-64 object-cover rounded-lg mb-6" />
@@ -420,7 +418,6 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                     <Select
                       value=""
                       onValueChange={(value) => {
-                        console.log('🚀 ~ ArticleForm ~ value:', value)
                         const selectedTag = tags.data?.find((tag) => tag.id === value)
                         if (selectedTag) {
                           setFormData((prev) => ({

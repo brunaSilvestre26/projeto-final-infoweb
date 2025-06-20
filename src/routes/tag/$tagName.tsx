@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useGetApprovedArticles } from '@/hooks/articles'
+import { useGetApprovedArticlesQuery } from '@/hooks/articles'
 import { createFileRoute, Link, useParams } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/tag/$tagName')({
@@ -7,7 +7,7 @@ export const Route = createFileRoute('/tag/$tagName')({
 })
 
 function RouteComponent() {
-  const articles = useGetApprovedArticles()
+  const articles = useGetApprovedArticlesQuery()
   const { tagName } = useParams({ from: '/tag/$tagName' })
 
   const filteredArticles = articles.data?.filter((article) =>
