@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useGetRoleByIdQuery, useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
 import { Link, useLocation } from '@tanstack/react-router'
-import { BarChart3, FileText, Globe, Plus, Settings, Tag, User } from 'lucide-react'
+import { FileText, Globe, Plus, Settings, Tag, User } from 'lucide-react'
 
 export function BackofficeSidebar() {
   const location = useLocation()
@@ -12,14 +12,11 @@ export function BackofficeSidebar() {
   const isReviewer = role.data?.name === 'Reviewer'
 
   const writerViews = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, path: '/admin' },
+    { id: 'manage', label: 'Manage Articles', icon: FileText, path: '/admin' },
     { id: 'create', label: 'Create Article', icon: Plus, path: '/admin/create' },
   ]
 
-  const reviewerViews = [
-    ...writerViews,
-    { id: 'manage', label: 'Manage Articles', icon: FileText, path: '/admin/manage' },
-  ]
+  const reviewerViews = [...writerViews]
 
   const adminViews = [
     ...reviewerViews,

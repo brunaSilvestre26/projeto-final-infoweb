@@ -31,7 +31,7 @@ export const Login = () => {
       })
       return
     }
-    navigate({ to: '/', reloadDocument: true }) // Redirect to home page after login
+    navigate({ to: '/admin', reloadDocument: true }) // Redirect to home page after login
   }
 
   return (

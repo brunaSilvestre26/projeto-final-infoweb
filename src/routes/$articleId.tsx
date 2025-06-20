@@ -12,7 +12,7 @@ function RouteComponent() {
   const { articleId } = useParams({ from: '/$articleId' })
   const article = useGetArticleById(articleId)
 
-  if (article.isLoading) return <div>Carregando...</div>
+  if (article.isLoading) return <div>A carregar...</div>
   if (article.isError || !article.data) return <div>Artigo não encontrado.</div>
 
   const formatDate = (dateString: string) => {

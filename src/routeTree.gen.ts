@@ -23,7 +23,6 @@ import { Route as AuthedProfileImport } from './routes/_authed/profile'
 import { Route as AuthedAdminIndexImport } from './routes/_authed/admin/index'
 import { Route as AuthedAdminSourcesImport } from './routes/_authed/admin/sources'
 import { Route as AuthedAdminSettingsImport } from './routes/_authed/admin/settings'
-import { Route as AuthedAdminManageImport } from './routes/_authed/admin/manage'
 import { Route as AuthedAdminCreateImport } from './routes/_authed/admin/create'
 import { Route as AuthedAdminCategoriesImport } from './routes/_authed/admin/categories'
 import { Route as AuthedAdminAccountsImport } from './routes/_authed/admin/accounts'
@@ -98,12 +97,6 @@ const AuthedAdminSourcesRoute = AuthedAdminSourcesImport.update({
 const AuthedAdminSettingsRoute = AuthedAdminSettingsImport.update({
   id: '/admin/settings',
   path: '/admin/settings',
-  getParentRoute: () => AuthedRoute,
-} as any)
-
-const AuthedAdminManageRoute = AuthedAdminManageImport.update({
-  id: '/admin/manage',
-  path: '/admin/manage',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -213,13 +206,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedAdminCreateImport
       parentRoute: typeof AuthedImport
     }
-    '/_authed/admin/manage': {
-      id: '/_authed/admin/manage'
-      path: '/admin/manage'
-      fullPath: '/admin/manage'
-      preLoaderRoute: typeof AuthedAdminManageImport
-      parentRoute: typeof AuthedImport
-    }
     '/_authed/admin/settings': {
       id: '/_authed/admin/settings'
       path: '/admin/settings'
@@ -251,7 +237,6 @@ interface AuthedRouteChildren {
   AuthedAdminAccountsRoute: typeof AuthedAdminAccountsRoute
   AuthedAdminCategoriesRoute: typeof AuthedAdminCategoriesRoute
   AuthedAdminCreateRoute: typeof AuthedAdminCreateRoute
-  AuthedAdminManageRoute: typeof AuthedAdminManageRoute
   AuthedAdminSettingsRoute: typeof AuthedAdminSettingsRoute
   AuthedAdminSourcesRoute: typeof AuthedAdminSourcesRoute
   AuthedAdminIndexRoute: typeof AuthedAdminIndexRoute
@@ -262,7 +247,6 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedAdminAccountsRoute: AuthedAdminAccountsRoute,
   AuthedAdminCategoriesRoute: AuthedAdminCategoriesRoute,
   AuthedAdminCreateRoute: AuthedAdminCreateRoute,
-  AuthedAdminManageRoute: AuthedAdminManageRoute,
   AuthedAdminSettingsRoute: AuthedAdminSettingsRoute,
   AuthedAdminSourcesRoute: AuthedAdminSourcesRoute,
   AuthedAdminIndexRoute: AuthedAdminIndexRoute,
@@ -284,7 +268,6 @@ export interface FileRoutesByFullPath {
   '/admin/accounts': typeof AuthedAdminAccountsRoute
   '/admin/categories': typeof AuthedAdminCategoriesRoute
   '/admin/create': typeof AuthedAdminCreateRoute
-  '/admin/manage': typeof AuthedAdminManageRoute
   '/admin/settings': typeof AuthedAdminSettingsRoute
   '/admin/sources': typeof AuthedAdminSourcesRoute
   '/admin': typeof AuthedAdminIndexRoute
@@ -303,7 +286,6 @@ export interface FileRoutesByTo {
   '/admin/accounts': typeof AuthedAdminAccountsRoute
   '/admin/categories': typeof AuthedAdminCategoriesRoute
   '/admin/create': typeof AuthedAdminCreateRoute
-  '/admin/manage': typeof AuthedAdminManageRoute
   '/admin/settings': typeof AuthedAdminSettingsRoute
   '/admin/sources': typeof AuthedAdminSourcesRoute
   '/admin': typeof AuthedAdminIndexRoute
@@ -323,7 +305,6 @@ export interface FileRoutesById {
   '/_authed/admin/accounts': typeof AuthedAdminAccountsRoute
   '/_authed/admin/categories': typeof AuthedAdminCategoriesRoute
   '/_authed/admin/create': typeof AuthedAdminCreateRoute
-  '/_authed/admin/manage': typeof AuthedAdminManageRoute
   '/_authed/admin/settings': typeof AuthedAdminSettingsRoute
   '/_authed/admin/sources': typeof AuthedAdminSourcesRoute
   '/_authed/admin/': typeof AuthedAdminIndexRoute
@@ -344,7 +325,6 @@ export interface FileRouteTypes {
     | '/admin/accounts'
     | '/admin/categories'
     | '/admin/create'
-    | '/admin/manage'
     | '/admin/settings'
     | '/admin/sources'
     | '/admin'
@@ -362,7 +342,6 @@ export interface FileRouteTypes {
     | '/admin/accounts'
     | '/admin/categories'
     | '/admin/create'
-    | '/admin/manage'
     | '/admin/settings'
     | '/admin/sources'
     | '/admin'
@@ -380,7 +359,6 @@ export interface FileRouteTypes {
     | '/_authed/admin/accounts'
     | '/_authed/admin/categories'
     | '/_authed/admin/create'
-    | '/_authed/admin/manage'
     | '/_authed/admin/settings'
     | '/_authed/admin/sources'
     | '/_authed/admin/'
@@ -442,7 +420,6 @@ export const routeTree = rootRoute
         "/_authed/admin/accounts",
         "/_authed/admin/categories",
         "/_authed/admin/create",
-        "/_authed/admin/manage",
         "/_authed/admin/settings",
         "/_authed/admin/sources",
         "/_authed/admin/"
@@ -477,10 +454,6 @@ export const routeTree = rootRoute
     },
     "/_authed/admin/create": {
       "filePath": "_authed/admin/create.tsx",
-      "parent": "/_authed"
-    },
-    "/_authed/admin/manage": {
-      "filePath": "_authed/admin/manage.tsx",
       "parent": "/_authed"
     },
     "/_authed/admin/settings": {
