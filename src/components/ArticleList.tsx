@@ -25,11 +25,14 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
   const [openDialogId, setOpenDialogId] = useState<string | null>(null)
   const sources = useGetSourcesQuery()
 
+  const internalArticles = articles?.filter((article) => article.source_id === null)
+
   const getArticleSource = (article: any) => {
     const source = sources.data?.find((s) => s.id === article.source_id)
     return source ? { name: source.name, url: source.url } : { name: 'JornalismoUBI', url: '' }
   }
 
+  const filteredArticles = isBackoffice ? internalArticles : articles
   /**
    * Se for writer:
    * - Ver artigos aprovados escritos pelo writer -FEITO (falta filtrar)
@@ -63,7 +66,7 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {articles?.map((article) => (
+      {filteredArticles?.map((article) => (
         <Card className="group hover:shadow-lg transition-all duration-200 overflow-hidden" key={article.id}>
           {article.image_url && (
             <div className="aspect-video overflow-hidden -mt-6">
@@ -140,7 +143,12 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
             )}
             {!isBackoffice && <Badge className="mb-2">{getArticleSource(article).name}</Badge>}
             {/* Se a fonte for JornalismoUBI, utilizat Link interno, se não, utiliza anchor tag para link externo */}
-            {getArticleSource(article).name === 'JornalismoUBI' ? (
+            {isBackoffice ? (
+              <Link to="/admin/edit/$articleId" params={{ articleId: article.id }}>
+                <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
+                <CardDescription>{article.summary}</CardDescription>
+              </Link>
+            ) : getArticleSource(article).name === 'JornalismoUBI' ? (
               <Link to="/$articleId" params={{ articleId: article.id }}>
                 <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
                 <CardDescription>{article.summary}</CardDescription>

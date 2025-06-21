@@ -31,6 +31,7 @@ export function BackofficeSidebar() {
   const isActiveRoute = (path: string) => {
     if (path === '/' && location.pathname === '/') return true
     if (path !== '/' && location.pathname === path) return true
+    if (location.pathname.startsWith('/admin/edit') && path === '/admin') return true
     return false
   }
 
