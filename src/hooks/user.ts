@@ -12,6 +12,7 @@ export const useGetRoleByIdQuery = (id: string) => {
   return useQuery({
     queryKey: ['roleById', id],
     queryFn: () => getRoleById(id),
+    enabled: !!id, // só executa se id estiver definido
   })
 }
 
