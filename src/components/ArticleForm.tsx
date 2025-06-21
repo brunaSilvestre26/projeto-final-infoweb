@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useGetArticleByIdQuery } from '@/hooks/articles'
 import { useGetAuthorsQuery } from '@/hooks/authors'
 import { useGetTags } from '@/hooks/tags'
+import { useGetRoleByIdQuery, useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
 import { supabase } from '@/supabase/supabase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -29,14 +30,13 @@ interface ArticleFormData {
 }
 
 interface ArticleFormProps {
+  isEditing?: boolean
   articleId?: string
 }
 
-export function ArticleForm({ articleId }: ArticleFormProps) {
+export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
-  const isEditing = !!articleId
 
   const [formData, setFormData] = useState<ArticleFormData>({
     title: '',
@@ -47,8 +47,12 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     authors: [],
     tags: [],
   })
-  const [showPreview, setShowPreview] = useState(false)
+
+  const [showPreview, setShowPreview] = useState(isEditing ? true : false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const user = useGetUserQuery()
+  const userById = useGetUserByIdQuery(user.data?.id!)
+  const currentUserRole = useGetRoleByIdQuery(userById.data?.role_id!)
 
   // Fetch authors
   const authors = useGetAuthorsQuery()
@@ -103,6 +107,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['approvedArticles'] })
+      queryClient.invalidateQueries({ queryKey: ['articles'] })
       navigate({ to: '/admin' })
     },
   })
@@ -119,7 +124,8 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           title: data.title,
           summary: data.summary,
           content: data.content,
-          status: 'pending',
+          image_url: data.image_url === '' ? DEFAULT_IMAGE_URL : data.image_url,
+          status: currentUserRole.data?.name === 'writer' ? 'pending' : formData.status,
         })
         .eq('id', articleId)
 
@@ -156,7 +162,8 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['approvedArticles'] })
       queryClient.invalidateQueries({ queryKey: ['article', articleId] })
-      navigate({ to: '/admin' })
+      queryClient.invalidateQueries({ queryKey: ['articles'] })
+      setShowPreview(true)
     },
   })
 
@@ -168,7 +175,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         summary: article.data.summary || '',
         content: article.data.content || '',
         image_url: article.data.image_url || DEFAULT_IMAGE_URL,
-        status: 'pending',
+        status: article.data.status || 'pending',
         authors:
           article.data.article_authors?.map((author) => ({
             id: author.author_id,
@@ -233,6 +240,10 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     return tags.data?.find((t) => t.id === tagId)?.name || 'Unknown Tag'
   }
 
+  if (authors.isLoading || tags.isLoading || (isEditing && article.isLoading)) {
+    return <div className="w-full flex justify-center">A carregar...</div>
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -271,6 +282,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                     : 'Pendente'}
               </span>
             </div>
+
             {formData.image_url && (
               <img src={formData.image_url} alt={formData.title} className="w-full h-64 object-cover rounded-lg mb-6" />
             )}
@@ -309,6 +321,34 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {currentUserRole.data?.name !== 'Writer' && (
+                <div>
+                  <Label htmlFor="title" className="mb-2">
+                    Estado
+                  </Label>
+                  <Select
+                    value={formData.status}
+                    onValueChange={(value) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        status: value as Tables<'article'>['status'],
+                      }))
+                    }}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Fonte" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="pending">Pendente</SelectItem>
+                        <SelectItem value="approved">Aprovado</SelectItem>
+                        <SelectItem value="rejected">Rejeitado</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
               <div className="lg:col-span-2">
                 <Label htmlFor="title" className="mb-2">
                   Título *

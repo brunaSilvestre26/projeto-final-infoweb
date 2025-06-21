@@ -50,11 +50,12 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
   const deleteArticleMutation = useMutation({
     mutationFn: async (id: string) => {
       await supabase.from('article').delete().eq('id', id)
-      queryClient.invalidateQueries({ queryKey: ['articlesByAuthorId'] })
     },
     onSuccess: () => {
       toast.success('Artigo apagado com sucesso')
       setOpenDialogId(null) // Fecha o dialog só quando terminar
+      queryClient.invalidateQueries({ queryKey: ['articlesByAuthorId'] })
+      queryClient.invalidateQueries({ queryKey: ['articles'] })
     },
     onError: () => {
       toast.error('Erro ao apagar artigo')
@@ -143,12 +144,7 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
             )}
             {!isBackoffice && <Badge className="mb-2">{getArticleSource(article).name}</Badge>}
             {/* Se a fonte for JornalismoUBI, utilizat Link interno, se não, utiliza anchor tag para link externo */}
-            {isBackoffice ? (
-              <Link to="/admin/edit/$articleId" params={{ articleId: article.id }}>
-                <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
-                <CardDescription>{article.summary}</CardDescription>
-              </Link>
-            ) : getArticleSource(article).name === 'JornalismoUBI' ? (
+            {getArticleSource(article).name === 'JornalismoUBI' ? (
               <Link to="/$articleId" params={{ articleId: article.id }}>
                 <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
                 <CardDescription>{article.summary}</CardDescription>
