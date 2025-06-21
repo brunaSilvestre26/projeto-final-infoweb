@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { ArticlesType } from '@/hooks/articles'
+import { useGetSourcesQuery } from '@/hooks/sources'
 import { supabase } from '@/supabase/supabase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
@@ -22,13 +23,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 export const ArticleList = ({ articles, isBackoffice = false }: { articles: ArticlesType; isBackoffice?: boolean }) => {
   const queryClient = useQueryClient()
   const [openDialogId, setOpenDialogId] = useState<string | null>(null)
+  const sources = useGetSourcesQuery()
+
+  const getArticleSource = (article: any) => {
+    const source = sources.data?.find((s) => s.id === article.source_id)
+    return source ? { name: source.name, url: source.url } : { name: 'JornalismoUBI', url: '' }
+  }
 
   /**
    * Se for writer:
    * - Ver artigos aprovados escritos pelo writer -FEITO (falta filtrar)
    * - Ver artigos pendentes escritos pelo writer -FEITO (falta filtrar)
-   * - Botão para editar artigo
-   * - Botão para apagar artigo
+   * - Botão para editar artigo - FEITO
+   * - Botão para apagar artigo - FEITO
    *
    * Se for reviewer ou admin:
    * - Ver artigos escritos por todos os writers
@@ -131,11 +138,19 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
                 </div>
               </div>
             )}
-
-            <Link to="/$articleId" params={{ articleId: article.id }}>
-              <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
-              <CardDescription>{article.summary}</CardDescription>
-            </Link>
+            {!isBackoffice && <Badge className="mb-2">{getArticleSource(article).name}</Badge>}
+            {/* Se a fonte for JornalismoUBI, utilizat Link interno, se não, utiliza anchor tag para link externo */}
+            {getArticleSource(article).name === 'JornalismoUBI' ? (
+              <Link to="/$articleId" params={{ articleId: article.id }}>
+                <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
+                <CardDescription>{article.summary}</CardDescription>
+              </Link>
+            ) : (
+              <a href={article.url!} target="_blank">
+                <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
+                <CardDescription>{article.summary}</CardDescription>
+              </a>
+            )}
           </CardHeader>
           <CardContent>
             <div className="mb-2 text-sm text-muted-foreground">
