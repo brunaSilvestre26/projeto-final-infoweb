@@ -2,7 +2,7 @@ import { Header } from '@/components/layout/Header'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Toaster } from '@/components/ui/sonner'
-import isAuthenticated from '@/hooks/isAutheticated'
+import { isAuthenticatedQueryOptions } from '@/hooks/isAutheticated'
 import { getUser, getUserById } from '@/hooks/user'
 import { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext } from '@tanstack/react-router'
@@ -15,7 +15,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       queryFn: getUser,
     })
 
-    const authenticated = await isAuthenticated()
+    const authenticated = await queryClient.fetchQuery(isAuthenticatedQueryOptions)
 
     if (authenticated) {
       await queryClient.prefetchQuery({
