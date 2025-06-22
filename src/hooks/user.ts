@@ -8,18 +8,17 @@ export const useGetUserByIdQuery = (id: string) => {
   })
 }
 
-export const useGetRoleByIdQuery = (id: string) => {
-  return useQuery({
-    queryKey: ['roleById', id],
-    queryFn: () => getRoleById(id),
-    enabled: !!id, // só executa se id estiver definido
-  })
-}
-
 export const useGetUserQuery = () => {
   return useQuery({
     queryKey: ['getUser'],
     queryFn: getUser,
+  })
+}
+
+export const useGetUsersQuery = () => {
+  return useQuery({
+    queryKey: ['getUsers'],
+    queryFn: getUsers,
   })
 }
 
@@ -33,7 +32,7 @@ export const getUserById = async (id: string) => {
   return data
 }
 
-const getRoleById = async (id: string) => {
-  const { data } = await supabase.from('role').select('*').eq('id', id).single()
+const getUsers = async () => {
+  const { data } = await supabase.from('user').select('*')
   return data
 }
