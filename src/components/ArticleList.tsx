@@ -68,10 +68,7 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       {filteredArticles?.map((article) => (
-        <Card
-          className="group hover:shadow-lg transition-all duration-200 overflow-hidden min-w-[400px]"
-          key={article.id}
-        >
+        <Card className="group hover:shadow-lg transition-all duration-200 overflow-hidden" key={article.id}>
           {article.image_url && (
             <div className="aspect-video overflow-hidden -mt-6">
               <img
