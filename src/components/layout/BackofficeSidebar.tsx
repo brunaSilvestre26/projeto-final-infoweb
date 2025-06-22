@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useGetRoleByIdQuery, useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
 import { Link, useLocation } from '@tanstack/react-router'
-import { FileText, Globe, Plus, Settings, Tag, User } from 'lucide-react'
+import { FileText, Globe, Plus, Tag, User } from 'lucide-react'
 
 export function BackofficeSidebar() {
   const location = useLocation()
@@ -12,18 +12,17 @@ export function BackofficeSidebar() {
   const isReviewer = role.data?.name === 'Reviewer'
 
   const writerViews = [
-    { id: 'manage', label: 'Manage Articles', icon: FileText, path: '/admin' },
-    { id: 'create', label: 'Create Article', icon: Plus, path: '/admin/create' },
+    { id: 'gerir', label: 'Gerir Artigos', icon: FileText, path: '/admin' },
+    { id: 'criar', label: 'Criar Artigo', icon: Plus, path: '/admin/criar' },
   ]
 
   const reviewerViews = [...writerViews]
 
   const adminViews = [
     ...reviewerViews,
-    { id: 'categories', label: 'Categories', icon: Tag, path: '/admin/categories' },
-    { id: 'sources', label: 'Sources', icon: Globe, path: '/admin/sources' },
-    { id: 'accounts', label: 'Accounts', icon: User, path: '/admin/accounts' },
-    { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings' },
+    { id: 'contas', label: 'Gerir Contas', icon: User, path: '/admin/contas' },
+    { id: 'fontes', label: 'Gerir Fontes', icon: Globe, path: '/admin/fontes' },
+    { id: 'tags', label: 'Gerir Tags', icon: Tag, path: '/admin/tags' },
   ]
 
   const views = isAdmin ? adminViews : isReviewer ? reviewerViews : writerViews
