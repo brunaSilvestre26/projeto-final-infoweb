@@ -1,5 +1,4 @@
 import { Login } from '@/components/Login'
-import { Signup } from '@/components/Signup'
 import { isAuthenticatedQueryOptions } from '@/hooks/isAutheticated'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
@@ -20,7 +19,6 @@ function RouteComponent() {
   return (
     <div className="mt-10">
       <Login />
-      <Signup />
     </div>
   )
 }
