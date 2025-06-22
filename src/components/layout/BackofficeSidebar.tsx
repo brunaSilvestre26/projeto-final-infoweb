@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { useGetRoleByIdQuery, useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
+import { useGetRoleByIdQuery } from '@/hooks/roles'
+import { useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
 import { Link, useLocation } from '@tanstack/react-router'
 import { FileText, Globe, Plus, Tag, User } from 'lucide-react'
 

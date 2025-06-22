@@ -18,7 +18,6 @@ function Index() {
   const [selectedSource, setSelectedSource] = useState<string | undefined>('all')
 
   const articles = useGetApprovedArticlesQuery()
-  console.log('🚀 ~ Index ~ articles:', articles.data)
   const sources = useGetSourcesQuery()
 
   const filteredArticles =
