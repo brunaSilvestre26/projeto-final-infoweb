@@ -11,9 +11,9 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SourcesImport } from './routes/sources'
 import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
+import { Route as FontesImport } from './routes/fontes'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthedImport } from './routes/_authed'
 import { Route as ArticleIdImport } from './routes/$articleId'
@@ -21,20 +21,13 @@ import { Route as IndexImport } from './routes/index'
 import { Route as TagTagNameImport } from './routes/tag/$tagName'
 import { Route as AuthedProfileImport } from './routes/_authed/profile'
 import { Route as AuthedAdminIndexImport } from './routes/_authed/admin/index'
-import { Route as AuthedAdminSourcesImport } from './routes/_authed/admin/sources'
-import { Route as AuthedAdminSettingsImport } from './routes/_authed/admin/settings'
-import { Route as AuthedAdminCreateImport } from './routes/_authed/admin/create'
-import { Route as AuthedAdminCategoriesImport } from './routes/_authed/admin/categories'
-import { Route as AuthedAdminAccountsImport } from './routes/_authed/admin/accounts'
+import { Route as AuthedAdminTagsImport } from './routes/_authed/admin/tags'
+import { Route as AuthedAdminFontesImport } from './routes/_authed/admin/fontes'
+import { Route as AuthedAdminCriarImport } from './routes/_authed/admin/criar'
+import { Route as AuthedAdminContasImport } from './routes/_authed/admin/contas'
 import { Route as AuthedAdminEditArticleIdImport } from './routes/_authed/admin/edit/$articleId'
 
 // Create/Update Routes
-
-const SourcesRoute = SourcesImport.update({
-  id: '/sources',
-  path: '/sources',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const LogoutRoute = LogoutImport.update({
   id: '/logout',
@@ -45,6 +38,12 @@ const LogoutRoute = LogoutImport.update({
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FontesRoute = FontesImport.update({
+  id: '/fontes',
+  path: '/fontes',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -89,33 +88,27 @@ const AuthedAdminIndexRoute = AuthedAdminIndexImport.update({
   getParentRoute: () => AuthedRoute,
 } as any)
 
-const AuthedAdminSourcesRoute = AuthedAdminSourcesImport.update({
-  id: '/admin/sources',
-  path: '/admin/sources',
+const AuthedAdminTagsRoute = AuthedAdminTagsImport.update({
+  id: '/admin/tags',
+  path: '/admin/tags',
   getParentRoute: () => AuthedRoute,
 } as any)
 
-const AuthedAdminSettingsRoute = AuthedAdminSettingsImport.update({
-  id: '/admin/settings',
-  path: '/admin/settings',
+const AuthedAdminFontesRoute = AuthedAdminFontesImport.update({
+  id: '/admin/fontes',
+  path: '/admin/fontes',
   getParentRoute: () => AuthedRoute,
 } as any)
 
-const AuthedAdminCreateRoute = AuthedAdminCreateImport.update({
-  id: '/admin/create',
-  path: '/admin/create',
+const AuthedAdminCriarRoute = AuthedAdminCriarImport.update({
+  id: '/admin/criar',
+  path: '/admin/criar',
   getParentRoute: () => AuthedRoute,
 } as any)
 
-const AuthedAdminCategoriesRoute = AuthedAdminCategoriesImport.update({
-  id: '/admin/categories',
-  path: '/admin/categories',
-  getParentRoute: () => AuthedRoute,
-} as any)
-
-const AuthedAdminAccountsRoute = AuthedAdminAccountsImport.update({
-  id: '/admin/accounts',
-  path: '/admin/accounts',
+const AuthedAdminContasRoute = AuthedAdminContasImport.update({
+  id: '/admin/contas',
+  path: '/admin/contas',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -157,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/fontes': {
+      id: '/fontes'
+      path: '/fontes'
+      fullPath: '/fontes'
+      preLoaderRoute: typeof FontesImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -169,13 +169,6 @@ declare module '@tanstack/react-router' {
       path: '/logout'
       fullPath: '/logout'
       preLoaderRoute: typeof LogoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/sources': {
-      id: '/sources'
-      path: '/sources'
-      fullPath: '/sources'
-      preLoaderRoute: typeof SourcesImport
       parentRoute: typeof rootRoute
     }
     '/_authed/profile': {
@@ -192,39 +185,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TagTagNameImport
       parentRoute: typeof rootRoute
     }
-    '/_authed/admin/accounts': {
-      id: '/_authed/admin/accounts'
-      path: '/admin/accounts'
-      fullPath: '/admin/accounts'
-      preLoaderRoute: typeof AuthedAdminAccountsImport
+    '/_authed/admin/contas': {
+      id: '/_authed/admin/contas'
+      path: '/admin/contas'
+      fullPath: '/admin/contas'
+      preLoaderRoute: typeof AuthedAdminContasImport
       parentRoute: typeof AuthedImport
     }
-    '/_authed/admin/categories': {
-      id: '/_authed/admin/categories'
-      path: '/admin/categories'
-      fullPath: '/admin/categories'
-      preLoaderRoute: typeof AuthedAdminCategoriesImport
+    '/_authed/admin/criar': {
+      id: '/_authed/admin/criar'
+      path: '/admin/criar'
+      fullPath: '/admin/criar'
+      preLoaderRoute: typeof AuthedAdminCriarImport
       parentRoute: typeof AuthedImport
     }
-    '/_authed/admin/create': {
-      id: '/_authed/admin/create'
-      path: '/admin/create'
-      fullPath: '/admin/create'
-      preLoaderRoute: typeof AuthedAdminCreateImport
+    '/_authed/admin/fontes': {
+      id: '/_authed/admin/fontes'
+      path: '/admin/fontes'
+      fullPath: '/admin/fontes'
+      preLoaderRoute: typeof AuthedAdminFontesImport
       parentRoute: typeof AuthedImport
     }
-    '/_authed/admin/settings': {
-      id: '/_authed/admin/settings'
-      path: '/admin/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AuthedAdminSettingsImport
-      parentRoute: typeof AuthedImport
-    }
-    '/_authed/admin/sources': {
-      id: '/_authed/admin/sources'
-      path: '/admin/sources'
-      fullPath: '/admin/sources'
-      preLoaderRoute: typeof AuthedAdminSourcesImport
+    '/_authed/admin/tags': {
+      id: '/_authed/admin/tags'
+      path: '/admin/tags'
+      fullPath: '/admin/tags'
+      preLoaderRoute: typeof AuthedAdminTagsImport
       parentRoute: typeof AuthedImport
     }
     '/_authed/admin/': {
@@ -248,22 +234,20 @@ declare module '@tanstack/react-router' {
 
 interface AuthedRouteChildren {
   AuthedProfileRoute: typeof AuthedProfileRoute
-  AuthedAdminAccountsRoute: typeof AuthedAdminAccountsRoute
-  AuthedAdminCategoriesRoute: typeof AuthedAdminCategoriesRoute
-  AuthedAdminCreateRoute: typeof AuthedAdminCreateRoute
-  AuthedAdminSettingsRoute: typeof AuthedAdminSettingsRoute
-  AuthedAdminSourcesRoute: typeof AuthedAdminSourcesRoute
+  AuthedAdminContasRoute: typeof AuthedAdminContasRoute
+  AuthedAdminCriarRoute: typeof AuthedAdminCriarRoute
+  AuthedAdminFontesRoute: typeof AuthedAdminFontesRoute
+  AuthedAdminTagsRoute: typeof AuthedAdminTagsRoute
   AuthedAdminIndexRoute: typeof AuthedAdminIndexRoute
   AuthedAdminEditArticleIdRoute: typeof AuthedAdminEditArticleIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedProfileRoute: AuthedProfileRoute,
-  AuthedAdminAccountsRoute: AuthedAdminAccountsRoute,
-  AuthedAdminCategoriesRoute: AuthedAdminCategoriesRoute,
-  AuthedAdminCreateRoute: AuthedAdminCreateRoute,
-  AuthedAdminSettingsRoute: AuthedAdminSettingsRoute,
-  AuthedAdminSourcesRoute: AuthedAdminSourcesRoute,
+  AuthedAdminContasRoute: AuthedAdminContasRoute,
+  AuthedAdminCriarRoute: AuthedAdminCriarRoute,
+  AuthedAdminFontesRoute: AuthedAdminFontesRoute,
+  AuthedAdminTagsRoute: AuthedAdminTagsRoute,
   AuthedAdminIndexRoute: AuthedAdminIndexRoute,
   AuthedAdminEditArticleIdRoute: AuthedAdminEditArticleIdRoute,
 }
@@ -276,16 +260,15 @@ export interface FileRoutesByFullPath {
   '/$articleId': typeof ArticleIdRoute
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
+  '/fontes': typeof FontesRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
   '/tag/$tagName': typeof TagTagNameRoute
-  '/admin/accounts': typeof AuthedAdminAccountsRoute
-  '/admin/categories': typeof AuthedAdminCategoriesRoute
-  '/admin/create': typeof AuthedAdminCreateRoute
-  '/admin/settings': typeof AuthedAdminSettingsRoute
-  '/admin/sources': typeof AuthedAdminSourcesRoute
+  '/admin/contas': typeof AuthedAdminContasRoute
+  '/admin/criar': typeof AuthedAdminCriarRoute
+  '/admin/fontes': typeof AuthedAdminFontesRoute
+  '/admin/tags': typeof AuthedAdminTagsRoute
   '/admin': typeof AuthedAdminIndexRoute
   '/admin/edit/$articleId': typeof AuthedAdminEditArticleIdRoute
 }
@@ -295,16 +278,15 @@ export interface FileRoutesByTo {
   '/$articleId': typeof ArticleIdRoute
   '': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
+  '/fontes': typeof FontesRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/sources': typeof SourcesRoute
   '/profile': typeof AuthedProfileRoute
   '/tag/$tagName': typeof TagTagNameRoute
-  '/admin/accounts': typeof AuthedAdminAccountsRoute
-  '/admin/categories': typeof AuthedAdminCategoriesRoute
-  '/admin/create': typeof AuthedAdminCreateRoute
-  '/admin/settings': typeof AuthedAdminSettingsRoute
-  '/admin/sources': typeof AuthedAdminSourcesRoute
+  '/admin/contas': typeof AuthedAdminContasRoute
+  '/admin/criar': typeof AuthedAdminCriarRoute
+  '/admin/fontes': typeof AuthedAdminFontesRoute
+  '/admin/tags': typeof AuthedAdminTagsRoute
   '/admin': typeof AuthedAdminIndexRoute
   '/admin/edit/$articleId': typeof AuthedAdminEditArticleIdRoute
 }
@@ -315,16 +297,15 @@ export interface FileRoutesById {
   '/$articleId': typeof ArticleIdRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/about': typeof AboutRoute
+  '/fontes': typeof FontesRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/sources': typeof SourcesRoute
   '/_authed/profile': typeof AuthedProfileRoute
   '/tag/$tagName': typeof TagTagNameRoute
-  '/_authed/admin/accounts': typeof AuthedAdminAccountsRoute
-  '/_authed/admin/categories': typeof AuthedAdminCategoriesRoute
-  '/_authed/admin/create': typeof AuthedAdminCreateRoute
-  '/_authed/admin/settings': typeof AuthedAdminSettingsRoute
-  '/_authed/admin/sources': typeof AuthedAdminSourcesRoute
+  '/_authed/admin/contas': typeof AuthedAdminContasRoute
+  '/_authed/admin/criar': typeof AuthedAdminCriarRoute
+  '/_authed/admin/fontes': typeof AuthedAdminFontesRoute
+  '/_authed/admin/tags': typeof AuthedAdminTagsRoute
   '/_authed/admin/': typeof AuthedAdminIndexRoute
   '/_authed/admin/edit/$articleId': typeof AuthedAdminEditArticleIdRoute
 }
@@ -336,16 +317,15 @@ export interface FileRouteTypes {
     | '/$articleId'
     | ''
     | '/about'
+    | '/fontes'
     | '/login'
     | '/logout'
-    | '/sources'
     | '/profile'
     | '/tag/$tagName'
-    | '/admin/accounts'
-    | '/admin/categories'
-    | '/admin/create'
-    | '/admin/settings'
-    | '/admin/sources'
+    | '/admin/contas'
+    | '/admin/criar'
+    | '/admin/fontes'
+    | '/admin/tags'
     | '/admin'
     | '/admin/edit/$articleId'
   fileRoutesByTo: FileRoutesByTo
@@ -354,16 +334,15 @@ export interface FileRouteTypes {
     | '/$articleId'
     | ''
     | '/about'
+    | '/fontes'
     | '/login'
     | '/logout'
-    | '/sources'
     | '/profile'
     | '/tag/$tagName'
-    | '/admin/accounts'
-    | '/admin/categories'
-    | '/admin/create'
-    | '/admin/settings'
-    | '/admin/sources'
+    | '/admin/contas'
+    | '/admin/criar'
+    | '/admin/fontes'
+    | '/admin/tags'
     | '/admin'
     | '/admin/edit/$articleId'
   id:
@@ -372,16 +351,15 @@ export interface FileRouteTypes {
     | '/$articleId'
     | '/_authed'
     | '/about'
+    | '/fontes'
     | '/login'
     | '/logout'
-    | '/sources'
     | '/_authed/profile'
     | '/tag/$tagName'
-    | '/_authed/admin/accounts'
-    | '/_authed/admin/categories'
-    | '/_authed/admin/create'
-    | '/_authed/admin/settings'
-    | '/_authed/admin/sources'
+    | '/_authed/admin/contas'
+    | '/_authed/admin/criar'
+    | '/_authed/admin/fontes'
+    | '/_authed/admin/tags'
     | '/_authed/admin/'
     | '/_authed/admin/edit/$articleId'
   fileRoutesById: FileRoutesById
@@ -392,9 +370,9 @@ export interface RootRouteChildren {
   ArticleIdRoute: typeof ArticleIdRoute
   AuthedRoute: typeof AuthedRouteWithChildren
   AboutRoute: typeof AboutRoute
+  FontesRoute: typeof FontesRoute
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
-  SourcesRoute: typeof SourcesRoute
   TagTagNameRoute: typeof TagTagNameRoute
 }
 
@@ -403,9 +381,9 @@ const rootRouteChildren: RootRouteChildren = {
   ArticleIdRoute: ArticleIdRoute,
   AuthedRoute: AuthedRouteWithChildren,
   AboutRoute: AboutRoute,
+  FontesRoute: FontesRoute,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
-  SourcesRoute: SourcesRoute,
   TagTagNameRoute: TagTagNameRoute,
 }
 
@@ -423,9 +401,9 @@ export const routeTree = rootRoute
         "/$articleId",
         "/_authed",
         "/about",
+        "/fontes",
         "/login",
         "/logout",
-        "/sources",
         "/tag/$tagName"
       ]
     },
@@ -439,11 +417,10 @@ export const routeTree = rootRoute
       "filePath": "_authed.tsx",
       "children": [
         "/_authed/profile",
-        "/_authed/admin/accounts",
-        "/_authed/admin/categories",
-        "/_authed/admin/create",
-        "/_authed/admin/settings",
-        "/_authed/admin/sources",
+        "/_authed/admin/contas",
+        "/_authed/admin/criar",
+        "/_authed/admin/fontes",
+        "/_authed/admin/tags",
         "/_authed/admin/",
         "/_authed/admin/edit/$articleId"
       ]
@@ -451,14 +428,14 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
+    "/fontes": {
+      "filePath": "fontes.tsx"
+    },
     "/login": {
       "filePath": "login.tsx"
     },
     "/logout": {
       "filePath": "logout.tsx"
-    },
-    "/sources": {
-      "filePath": "sources.tsx"
     },
     "/_authed/profile": {
       "filePath": "_authed/profile.tsx",
@@ -467,24 +444,20 @@ export const routeTree = rootRoute
     "/tag/$tagName": {
       "filePath": "tag/$tagName.tsx"
     },
-    "/_authed/admin/accounts": {
-      "filePath": "_authed/admin/accounts.tsx",
+    "/_authed/admin/contas": {
+      "filePath": "_authed/admin/contas.tsx",
       "parent": "/_authed"
     },
-    "/_authed/admin/categories": {
-      "filePath": "_authed/admin/categories.tsx",
+    "/_authed/admin/criar": {
+      "filePath": "_authed/admin/criar.tsx",
       "parent": "/_authed"
     },
-    "/_authed/admin/create": {
-      "filePath": "_authed/admin/create.tsx",
+    "/_authed/admin/fontes": {
+      "filePath": "_authed/admin/fontes.tsx",
       "parent": "/_authed"
     },
-    "/_authed/admin/settings": {
-      "filePath": "_authed/admin/settings.tsx",
-      "parent": "/_authed"
-    },
-    "/_authed/admin/sources": {
-      "filePath": "_authed/admin/sources.tsx",
+    "/_authed/admin/tags": {
+      "filePath": "_authed/admin/tags.tsx",
       "parent": "/_authed"
     },
     "/_authed/admin/": {

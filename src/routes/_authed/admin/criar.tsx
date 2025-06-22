@@ -1,7 +1,7 @@
 import { ArticleForm } from '@/components/ArticleForm'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_authed/admin/create')({
+export const Route = createFileRoute('/_authed/admin/criar')({
   component: RouteComponent,
 })
 
