@@ -25,7 +25,7 @@ function RouteComponent() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Badge variant={source.is_active ? 'default' : 'secondary'}>
-                  {source.is_active ? 'Active' : 'Inactive'}
+                  {source.is_active ? 'Ativa' : 'Inativa'}
                 </Badge>
               </div>
 
