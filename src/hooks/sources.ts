@@ -11,6 +11,6 @@ export const useGetSourcesQuery = () => {
 
 // funções
 export const getSources = async () => {
-  const { data } = await supabase.from('source').select('*')
+  const { data } = await supabase.from('source').select('*').order('name', { ascending: true })
   return data
 }

@@ -1,3 +1,4 @@
+import { SourceManagement } from '@/components/SourceManagement'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authed/admin/fontes')({
@@ -5,5 +6,5 @@ export const Route = createFileRoute('/_authed/admin/fontes')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/_authed/admin/fontes"!</div>
+  return <SourceManagement />
 }
