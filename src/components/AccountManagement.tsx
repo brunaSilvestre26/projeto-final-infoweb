@@ -51,7 +51,11 @@ export function AccountManagement() {
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault()
-    signUpNewUser()
+    const error = signUpNewUser()
+    if (error) {
+      toast.error('Erro ao criar conta', { description: error })
+      return
+    }
     setNewAccountData({ email: '', password: '' })
     setIsCreateOpen(false)
     toast.success('Conta criada com sucesso')
@@ -78,61 +82,77 @@ export function AccountManagement() {
   }
 
   async function signUpNewUser() {
-    await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: newAccountData.email,
       password: newAccountData.password,
       options: {
         emailRedirectTo: 'http://localhost:5173/',
       },
     })
+    return error?.message
   }
 
   const updateUserMutation = useMutation({
     mutationFn: async ({ user_id, name, role_id }: { user_id: string; name: string; role_id: string }) => {
       // Update user
       if (name !== '' && role_id !== '') {
-        await supabase
+        const { error } = await supabase
           .from('user')
           .update({
             name,
             role_id,
           })
           .eq('id', user_id)
+        if (error) {
+          throw new Error(error.message)
+        }
       } else if (name !== '' && role_id === '') {
-        await supabase
+        const { error } = await supabase
           .from('user')
           .update({
             name,
           })
           .eq('id', user_id)
+        if (error) {
+          throw new Error(error.message)
+        }
       } else if (role_id !== '' && name === '') {
-        await supabase
+        const { error } = await supabase
           .from('user')
           .update({
             role_id,
           })
           .eq('id', user_id)
+        if (error) {
+          throw new Error(error.message)
+        }
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getUsers'] })
       toast.success('Conta atualizada com sucesso')
     },
+    onError: (error) => {
+      toast.error('Erro ao atualizar a conta', { description: error.message })
+    },
   })
 
   const deleteUserMutation = useMutation({
     mutationFn: async (userId: string) => {
-      await supabase.rpc('delete_user', {
+      const { error } = await supabase.rpc('delete_user', {
         user_id: userId,
       })
+      if (error) {
+        throw new Error(error.message)
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getUsers'] })
       setOpenDialogId(null) // Fecha o dialog só quando terminar
       toast.success('Conta apagada com sucesso')
     },
-    onError: () => {
-      toast.error('Erro ao apagar a conta')
+    onError: (error) => {
+      toast.error('Erro ao apagar a conta', { description: error.message })
     },
     onSettled: () => {
       setOpenDialogId(null)
@@ -157,7 +177,6 @@ export function AccountManagement() {
       <div className="flex justify-between items-center">
         <div className="ml-4">
           <h1 className="text-3xl font-bold text-gray-900">Gerir Contas</h1>
-          <p className="text-gray-500 mt-1">Gestão de contas e autenticação</p>
         </div>
 
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -178,12 +197,12 @@ export function AccountManagement() {
                   Email
                 </Label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="Introduza o endereço de email"
-                    className="pl-10"
+                    className="px-10 h-12 text-base"
                     value={newAccountData.email}
                     onChange={(e) => setNewAccountData({ ...newAccountData, email: e.target.value })}
                     required
@@ -195,12 +214,12 @@ export function AccountManagement() {
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="password"
                     type="password"
                     placeholder="Introduza a password"
-                    className="pl-10"
+                    className="px-10 h-12 text-base"
                     value={newAccountData.password}
                     onChange={(e) => setNewAccountData({ ...newAccountData, password: e.target.value })}
                     required
@@ -239,7 +258,7 @@ export function AccountManagement() {
             <TableBody>
               {users.data?.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell width={200} className="font-medium">
+                  <TableCell width={150} className="font-medium">
                     {user.name}
                   </TableCell>
                   <TableCell width={100}>
@@ -326,12 +345,12 @@ export function AccountManagement() {
                 Nome
               </Label>
               <div className="relative">
-                <UserPen className="w-4 h-4 absolute left-3 top-3 text-gray-400" />{' '}
+                <UserPen className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />{' '}
                 <Input
                   id="edit-name"
                   type="text"
                   placeholder="Introduza o nome"
-                  className="pl-10"
+                  className="px-10 h-12 text-base"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
@@ -343,7 +362,7 @@ export function AccountManagement() {
                 Tipo de Utilizador
               </Label>
               <div className="relative">
-                <ShieldUser className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                <ShieldUser className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Select
                   value={formData.role}
                   onValueChange={(value) => {
