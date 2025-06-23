@@ -1,3 +1,4 @@
+import { TagManagement } from '@/components/TagManagement'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authed/admin/tags')({
@@ -5,5 +6,5 @@ export const Route = createFileRoute('/_authed/admin/tags')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/_authed/admin/tags"!</div>
+  return <TagManagement />
 }

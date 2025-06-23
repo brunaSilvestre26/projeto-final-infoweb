@@ -2,7 +2,7 @@ import { supabase } from '@/supabase/supabase'
 import { useQuery } from '@tanstack/react-query'
 
 // hooks
-export const useGetTags = () => {
+export const useGetTagsQuery = () => {
   return useQuery({
     queryKey: ['tags'],
     queryFn: getTags,
@@ -11,6 +11,6 @@ export const useGetTags = () => {
 
 // funções
 export const getTags = async () => {
-  const { data } = await supabase.from('tag').select('id, name')
+  const { data } = await supabase.from('tag').select('*')
   return data
 }

@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useGetArticleByIdQuery } from '@/hooks/articles'
 import { useGetAuthorsQuery } from '@/hooks/authors'
 import { useGetRoleByIdQuery } from '@/hooks/roles'
-import { useGetTags } from '@/hooks/tags'
+import { useGetTagsQuery } from '@/hooks/tags'
 import { useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
 import { supabase } from '@/supabase/supabase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -59,7 +59,7 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
   const authors = useGetAuthorsQuery()
 
   // Fetch tags
-  const tags = useGetTags()
+  const tags = useGetTagsQuery()
 
   // Fetch article for editing
   const article = useGetArticleByIdQuery(articleId || undefined)
