@@ -119,7 +119,7 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
                           Tem a certeza que pretende eliminar o artigo '{article.title}'?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          Esta ação irá apagar permanentemente o artigo selecionado e não pode ser desfeita.
+                          Esta ação irá apagar permanentemente o artigo selecionado e não pode ser desfeita
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>

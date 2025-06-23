@@ -275,7 +275,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_user: {
+        Args: { user_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       article_status_enum: "approved" | "rejected" | "pending"

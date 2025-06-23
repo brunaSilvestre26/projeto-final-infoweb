@@ -1,3 +1,13 @@
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -16,9 +26,10 @@ import { useGetUsersQuery } from '@/hooks/user'
 import { supabase } from '@/supabase/supabase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Tables } from 'database.types'
-import { Edit, Lock, Mail, Plus, Trash2 } from 'lucide-react'
+import { Edit, Loader2Icon, Lock, Mail, Plus, ShieldUser, Trash2, UserPen } from 'lucide-react'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
+import { Badge } from './ui/badge'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
 export function AccountManagement() {
@@ -29,6 +40,7 @@ export function AccountManagement() {
   const [editingAccount, setEditingAccount] = useState<Tables<'user'> | null>(null)
   const [formData, setFormData] = useState({ name: '', password: '', role: '' })
   const [newAccountData, setNewAccountData] = useState({ email: '', password: '' })
+  const [openDialogId, setOpenDialogId] = useState<string | null>(null)
 
   const roles = useGetRolesQuery()
 
@@ -108,10 +120,42 @@ export function AccountManagement() {
     },
   })
 
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      await supabase.rpc('delete_user', {
+        user_id: userId,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getUsers'] })
+      setOpenDialogId(null) // Fecha o dialog só quando terminar
+      toast.success('Conta apagada com sucesso')
+    },
+    onError: () => {
+      toast.error('Erro ao apagar a conta')
+    },
+    onSettled: () => {
+      setOpenDialogId(null)
+    },
+  })
+
+  const getRoleBadgeColor = (role: string) => {
+    switch (role) {
+      case 'Admin':
+        return 'bg-red-100 text-red-800'
+      case 'Reviewer':
+        return 'bg-orange-100 text-orange-800'
+      case 'Writer':
+        return 'bg-green-100 text-green-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
+        <div className="ml-4">
           <h1 className="text-3xl font-bold text-gray-900">Gerir Contas</h1>
           <p className="text-gray-500 mt-1">Gestão de contas e autenticação</p>
         </div>
@@ -119,17 +163,20 @@ export function AccountManagement() {
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-4 h-4" />
               Criar Conta
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Criar Nova Conta</DialogTitle>
+              <DialogDescription></DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={handleCreate} className="space-y-6">
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="mb-2">
+                  Email
+                </Label>
                 <div className="relative">
                   <Mail className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                   <Input
@@ -144,7 +191,9 @@ export function AccountManagement() {
                 </div>
               </div>
               <div>
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="mb-2">
+                  Password
+                </Label>
                 <div className="relative">
                   <Lock className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                   <Input
@@ -181,18 +230,24 @@ export function AccountManagement() {
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
-                <TableHead>Role</TableHead>
+                <TableHead>Utilizador</TableHead>
                 <TableHead>Data de Criação</TableHead>
                 <TableHead>Última Atualização</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead className="text-center">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.data?.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell className="font-medium">{getRoleById(user.role_id!)}</TableCell>
-                  <TableCell>
+                  <TableCell width={200} className="font-medium">
+                    {user.name}
+                  </TableCell>
+                  <TableCell width={100}>
+                    <Badge variant="secondary" className={getRoleBadgeColor(getRoleById(user.role_id!)!)}>
+                      {getRoleById(user.role_id!)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell width={150}>
                     {user.created_at
                       ? (() => {
                           const date = new Date(user.created_at)
@@ -201,7 +256,7 @@ export function AccountManagement() {
                         })()
                       : ''}
                   </TableCell>
-                  <TableCell>
+                  <TableCell width={150}>
                     {user.updated_at
                       ? (() => {
                           const date = new Date(user.updated_at)
@@ -210,19 +265,47 @@ export function AccountManagement() {
                         })()
                       : ''}
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
+                  <TableCell width={50} className="text-center">
+                    <div className="space-x-2">
                       <Button variant="outline" size="sm" onClick={() => openEditDialog(user)}>
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => console.log('TODO: Implement delete user functionality')}
-                        className="text-red-600 hover:text-red-700"
+
+                      <AlertDialog
+                        open={openDialogId === user.id}
+                        onOpenChange={(open) => setOpenDialogId(open ? user.id : null)}
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Tem a certeza que pretende eliminar o utilizador '{user.name}'?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Esta ação irá apagar permanentemente o utilizador selecionado e não pode ser desfeita
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel
+                              disabled={deleteUserMutation.isPending}
+                              onClick={() => setOpenDialogId(null)}
+                            >
+                              Cancelar
+                            </AlertDialogCancel>
+                            <Button
+                              variant="destructive"
+                              onClick={() => deleteUserMutation.mutate(user.id!)}
+                              disabled={deleteUserMutation.isPending}
+                            >
+                              {deleteUserMutation.isPending ? <Loader2Icon className="animate-spin" /> : 'Apagar'}
+                            </Button>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -235,49 +318,57 @@ export function AccountManagement() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Editar Conta</DialogTitle>
-            <DialogDescription>
-              Faça as alterações necessárias e clique em "Atualizar Conta" para guardar
-            </DialogDescription>
+            <DialogDescription></DialogDescription>
           </DialogHeader>
-          <form onSubmit={(e) => handleEdit(e, isEditOpen.userId)} className="space-y-4">
+          <form onSubmit={(e) => handleEdit(e, isEditOpen.userId)} className="space-y-6">
             <div>
-              <Label htmlFor="edit-name">Nome</Label>
-              <Input
-                id="edit-name"
-                type="text"
-                placeholder="Introduza o nome"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-              />
+              <Label htmlFor="edit-name" className="mb-2">
+                Nome
+              </Label>
+              <div className="relative">
+                <UserPen className="w-4 h-4 absolute left-3 top-3 text-gray-400" />{' '}
+                <Input
+                  id="edit-name"
+                  type="text"
+                  placeholder="Introduza o nome"
+                  className="pl-10"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
             </div>
             <div>
               <Label htmlFor="title" className="mb-2">
                 Tipo de Utilizador
               </Label>
-              <Select
-                value={formData.role}
-                onValueChange={(value) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    role: value,
-                  }))
-                }}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Fonte" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {roles.data?.map((role) => (
-                      <SelectItem key={role.id} value={role.id!}>
-                        {role.name!}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <ShieldUser className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                <Select
+                  value={formData.role}
+                  onValueChange={(value) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      role: value,
+                    }))
+                  }}
+                >
+                  <SelectTrigger className="w-[180px] pl-10">
+                    <SelectValue placeholder="Fonte" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {roles.data?.map((role) => (
+                        <SelectItem key={role.id} value={role.id!}>
+                          {role.name!}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
+
             <div className="flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={() => setIsEditOpen({ open: false, userId: '' })}>
                 Cancelar
