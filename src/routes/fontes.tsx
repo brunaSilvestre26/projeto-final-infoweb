@@ -34,7 +34,7 @@ function RouteComponent() {
               {source.updated_at && (
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <RefreshCw className="h-4 w-4" />
-                  <span>Last fetch: {new Date(source.updated_at).toLocaleDateString()}</span>
+                  <span>Última atualização: {new Date(source.updated_at).toLocaleDateString()}</span>
                 </div>
               )}
             </div>
