@@ -1,14 +1,15 @@
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
 import { supabase } from '@/supabase/supabase'
 import { useNavigate } from '@tanstack/react-router'
-import React, { useState } from 'react'
-
 import { CircleAlert } from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
 
-export const Login = () => {
+export function Login({ className, ...props }: React.ComponentProps<'div'>) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
@@ -31,42 +32,59 @@ export const Login = () => {
       })
       return
     }
-    navigate({ to: '/admin', reloadDocument: true }) // Redirect to home page after login
+    navigate({ to: '/admin', reloadDocument: true })
   }
 
   return (
-    <div className="p-4 w-[500px] mx-auto border rounded shadow">
-      <h2 className="text-xl font-bold mb-4">Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <Label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email
-          </Label>
-          <Input
-            type="email"
-            id="email"
-            className="w-full p-2 border rounded mb-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Label htmlFor="password" className="block text-sm font-medium mb-1">
-            Password
-          </Label>
-          <Input
-            type="password"
-            id="password"
-            className="w-full p-2 border rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <Button variant="default" type="submit">
-          Entrar
-        </Button>
-      </form>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
+      <Card>
+        <CardHeader>
+          <CardTitle>Entrar</CardTitle>
+          <CardDescription>Introduza o seu email e password</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-3">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="email@exemplo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <Button type="submit" className="w-full">
+                  Entrar
+                </Button>
+              </div>
+            </div>
+            <div className="mt-4 text-center text-sm flex flex-col items-center gap-1">
+              Não tem conta mas quer contribuir para este site?
+              <span>
+                <a className="text-primary hover:underline" href="mailto:bruna.silvestre@ubi.pt">
+                  Contacte-nos
+                </a>
+              </span>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }

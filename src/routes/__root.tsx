@@ -25,11 +25,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     }
   },
   component: () => (
-    <div className="min-h-screen bg-gray-50">
-      <Header onSearchChange={() => {}} searchQuery="" isAdmin={true} onToggleAdmin={() => {}} />
+    <div className="bg-gray-50">
+      <Header />
       <div className="flex">
         <Sidebar />
-        <div className="ml-64 flex justify-center min-h-screen w-full">
+        <div className="ml-64 flex justify-center w-full">
           <PageLayout />
         </div>
       </div>
