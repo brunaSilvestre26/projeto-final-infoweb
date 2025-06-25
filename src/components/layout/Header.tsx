@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input'
 import { useGetUserQuery } from '@/hooks/user'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { FileCog, Newspaper, Search, User } from 'lucide-react'
+import { FileCog, Search, User } from 'lucide-react'
 import { useState } from 'react'
 import { SearchModal } from '../SearchModal'
 import { Button } from '../ui/button'
@@ -17,9 +17,8 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link className="flex items-center space-x-2 " to="/">
-            <Newspaper className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">JornalismoUBI</h1>
+          <Link className="flex items-center" to="/">
+            <img src="/logoJornalismoUBIpretoEazul.png" alt="Logo" className="h-7" />
           </Link>
 
           {/* Search */}
