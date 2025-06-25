@@ -25,7 +25,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     }
   },
   component: () => (
-    <div className="bg-gray-50">
+    <>
       <Header />
       <div className="flex">
         <Sidebar />
@@ -35,6 +35,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       </div>
       <Toaster position="top-center" />
       <TanStackRouterDevtools />
-    </div>
+    </>
   ),
 })
