@@ -51,14 +51,16 @@ export function AccountManagement() {
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault()
-    const error = signUpNewUser()
-    if (error) {
-      toast.error('Erro ao criar conta', { description: error })
-      return
-    }
-    setNewAccountData({ email: '', password: '' })
-    setIsCreateOpen(false)
-    toast.success('Conta criada com sucesso')
+    signUpNewUser()
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ['getUsers'] })
+        setNewAccountData({ email: '', password: '' })
+        setIsCreateOpen(false)
+        toast.success('Conta criada com sucesso')
+      })
+      .catch((err) => {
+        toast.error('Erro ao criar conta', { description: err })
+      })
   }
 
   const handleEdit = (e: React.FormEvent, userId: string) => {
