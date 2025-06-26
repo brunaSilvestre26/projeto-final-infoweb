@@ -16,7 +16,7 @@ export const useGetRolesQuery = () => {
   })
 }
 
-const getRoleById = async (id: string) => {
+export const getRoleById = async (id: string) => {
   const { data } = await supabase.from('role').select('*').eq('id', id).single()
   return data
 }

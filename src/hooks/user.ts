@@ -50,12 +50,14 @@ const getUsersByAuthorsIdsQuery = async (authorIds: string[]) => {
 
   if (!authorsData) return []
 
+  const nonNullUserIds = authorsData?.filter((author) => author.user_id !== null)
+
   const { data: usersData } = await supabase
     .from('user')
     .select('*')
     .in(
       'id',
-      authorsData.map((author) => author.user_id!)
+      nonNullUserIds.map((author) => author.user_id!)
     )
   return usersData
 }

@@ -39,7 +39,7 @@ export function Login({ className, ...props }: React.ComponentProps<'div'>) {
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Entrar</CardTitle>
+          <CardTitle className="text-xl font-bold">Iniciar sessão</CardTitle>
           <CardDescription>Introduza o seu email e password</CardDescription>
         </CardHeader>
         <CardContent>
