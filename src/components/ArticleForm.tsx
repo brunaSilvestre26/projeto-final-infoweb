@@ -6,10 +6,9 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useGetArticleByIdQuery } from '@/hooks/articles'
-import { useGetAuthorsQuery } from '@/hooks/authors'
 import { useGetRoleByIdQuery } from '@/hooks/roles'
 import { useGetTagsQuery } from '@/hooks/tags'
-import { useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
+import { useGetUserByIdQuery, useGetUserQuery, useGetUsersByAuthorsIdsQuery, useGetUsersQuery } from '@/hooks/user'
 import { supabase } from '@/supabase/supabase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -54,15 +53,20 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
   const user = useGetUserQuery()
   const userById = useGetUserByIdQuery(user.data?.id!)
   const currentUserRole = useGetRoleByIdQuery(userById.data?.role_id!)
+  const users = useGetUsersQuery()
 
   // Fetch authors
-  const authors = useGetAuthorsQuery()
 
   // Fetch tags
   const tags = useGetTagsQuery()
 
   // Fetch article for editing
   const article = useGetArticleByIdQuery(articleId || undefined)
+
+  // Find users by authors IDs to pre-fill authors in the form
+  const usersByAuthorsIds = useGetUsersByAuthorsIdsQuery(
+    article?.data?.article_authors?.map((author) => author.author_id) || []
+  )
 
   // Create article mutation
   const createArticleMutation = useMutation({
@@ -82,10 +86,41 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
 
       if (articleError) throw articleError
 
+      // Create new authors if they don't exist
+      const selectedUsers = data.authors
+      const { data: authorsData, error: authorsError } = await supabase
+        .from('author')
+        .select()
+        .in(
+          'user_id',
+          selectedUsers.map((a) => a.id)
+        )
+      if (authorsError) throw authorsError
+      const missingAuthors = selectedUsers.filter(
+        (selectedUser) => !authorsData?.some((author) => author.user_id === selectedUser.id)
+      )
+
+      if (missingAuthors.length > 0) {
+        const { data: newAuthors, error: insertError } = await supabase
+          .from('author')
+          .insert(
+            missingAuthors.map((author) => ({
+              user_id: author.id,
+              name: author.name,
+            }))
+          )
+          .select()
+
+        if (insertError) throw insertError
+
+        // Merge new authors with existing ones
+        authorsData?.push(...newAuthors)
+      }
+
       // Insert article_authors relationships
-      if (data.authors.length > 0) {
+      if (data.authors.length > 0 && authorsData && authorsData.length > 0) {
         const { error: authorsError } = await supabase.from('article_authors').insert(
-          data.authors.map((author) => ({
+          authorsData.map((author) => ({
             article_id: articleData.id,
             author_id: author.id,
           }))
@@ -126,7 +161,7 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
           summary: data.summary,
           content: data.content,
           image_url: data.image_url === '' ? DEFAULT_IMAGE_URL : data.image_url,
-          status: currentUserRole.data?.name === 'writer' ? 'pending' : formData.status,
+          status: currentUserRole.data?.name === 'writer' ? 'pending' : data.status,
         })
         .eq('id', articleId)
 
@@ -136,10 +171,41 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
       await supabase.from('article_authors').delete().eq('article_id', articleId)
       await supabase.from('article_tags').delete().eq('article_id', articleId)
 
-      // Insert new article_authors relationships
-      if (data.authors.length > 0) {
+      // Create new authors if they don't exist
+      const selectedUsers = data.authors
+      const { data: authorsData, error: authorsError } = await supabase
+        .from('author')
+        .select()
+        .in(
+          'user_id',
+          selectedUsers.map((a) => a.id)
+        )
+      if (authorsError) throw authorsError
+      const missingAuthors = selectedUsers.filter(
+        (selectedUser) => !authorsData?.some((author) => author.user_id === selectedUser.id)
+      )
+
+      if (missingAuthors.length > 0) {
+        const { data: newAuthors, error: insertError } = await supabase
+          .from('author')
+          .insert(
+            missingAuthors.map((author) => ({
+              user_id: author.id,
+              name: author.name,
+            }))
+          )
+          .select()
+
+        if (insertError) throw insertError
+
+        // Merge new authors with existing ones
+        authorsData?.push(...newAuthors)
+      }
+
+      // Insert article_authors relationships
+      if (data.authors.length > 0 && authorsData && authorsData.length > 0) {
         const { error: authorsError } = await supabase.from('article_authors').insert(
-          data.authors.map((author) => ({
+          authorsData.map((author) => ({
             article_id: articleId,
             author_id: author.id,
           }))
@@ -178,9 +244,9 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
         image_url: article.data.image_url || DEFAULT_IMAGE_URL,
         status: article.data.status || 'pending',
         authors:
-          article.data.article_authors?.map((author) => ({
-            id: author.author_id,
-            name: author.name ?? '',
+          usersByAuthorsIds.data?.map((user) => ({
+            id: user.id,
+            name: user.name ?? '',
           })) || [],
         tags:
           article.data.article_tags?.map((tag) => ({
@@ -189,7 +255,7 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
           })) || [],
       })
     }
-  }, [article.data])
+  }, [article.data, usersByAuthorsIds.data])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -234,14 +300,20 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
   }
 
   const getAuthorName = (authorId: string) => {
-    return authors.data?.find((a) => a.id === authorId)?.name || 'Unknown Author'
+    return users.data?.find((user) => user.id === authorId)?.name || 'Autor Desconhecido'
   }
 
   const getTagName = (tagId: string) => {
-    return tags.data?.find((t) => t.id === tagId)?.name || 'Unknown Tag'
+    return tags.data?.find((t) => t.id === tagId)?.name || 'Tag Desconhecida'
   }
 
-  if (authors.isLoading || tags.isLoading || (isEditing && article.isLoading)) {
+  if (
+    tags.isLoading ||
+    (isEditing && article.isLoading) ||
+    users.isLoading ||
+    userById.isLoading ||
+    currentUserRole.isLoading
+  ) {
     return <div className="w-full flex justify-center">A carregar...</div>
   }
 
@@ -411,11 +483,11 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
                     <Select
                       value=""
                       onValueChange={(value) => {
-                        const selectedAuthor = authors.data?.find((author) => author.id === value)
-                        if (selectedAuthor && !formData.authors.some((author) => author.id === selectedAuthor.id)) {
+                        const selectedUser = users.data?.find((user) => user.id === value)
+                        if (selectedUser && !formData.authors.some((author) => author.id === selectedUser.id)) {
                           setFormData((prev) => ({
                             ...prev,
-                            authors: [...prev.authors, selectedAuthor],
+                            authors: [...prev.authors, { name: selectedUser.name!, id: selectedUser.id }],
                           }))
                         }
                       }}
@@ -424,11 +496,11 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
                         <SelectValue placeholder="Selecionar um autor..." />
                       </SelectTrigger>
                       <SelectContent>
-                        {authors.data
-                          ?.filter((author) => !formData.authors.includes({ id: author.id, name: author.name }))
-                          .map((author) => (
-                            <SelectItem key={author.id} value={author.id}>
-                              {author.name}
+                        {users.data
+                          ?.filter((user) => !formData.authors.includes({ id: user.id, name: user.name! }))
+                          .map((user) => (
+                            <SelectItem key={user.id} value={user.id}>
+                              {user.name}
                             </SelectItem>
                           ))}
                       </SelectContent>
