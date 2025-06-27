@@ -192,6 +192,7 @@ export type Database = {
           created_at: string | null
           id: string
           is_active: boolean
+          last_scraped_at: string | null
           name: string
           type: string | null
           updated_at: string | null
@@ -201,6 +202,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean
+          last_scraped_at?: string | null
           name: string
           type?: string | null
           updated_at?: string | null
@@ -210,6 +212,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean
+          last_scraped_at?: string | null
           name?: string
           type?: string | null
           updated_at?: string | null
