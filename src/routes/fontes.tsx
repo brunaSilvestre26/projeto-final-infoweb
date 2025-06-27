@@ -31,10 +31,18 @@ function RouteComponent() {
 
               {source.url && <p className="text-sm text-muted-foreground break-all">{source.url}</p>}
 
-              {source.updated_at && (
+              {source.last_scraped_at && (
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <RefreshCw className="h-4 w-4" />
-                  <span>Última atualização: {new Date(source.updated_at).toLocaleDateString()}</span>
+                  <span>
+                    {new Date(source.last_scraped_at).toLocaleString('pt-PT', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
                 </div>
               )}
             </div>
