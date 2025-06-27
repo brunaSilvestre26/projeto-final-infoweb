@@ -14,7 +14,7 @@ import { useGetSourcesQuery } from '@/hooks/sources'
 import { supabase } from '@/supabase/supabase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { Loader2Icon, SquarePen, Trash2 } from 'lucide-react'
+import { ExternalLink, Loader2Icon, SquarePen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Badge } from './ui/badge'
@@ -142,7 +142,11 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
                 </div>
               </div>
             )}
-            {!isBackoffice && <Badge className="mb-2">{getArticleSource(article).name}</Badge>}
+            <span className="flex items-center justify-between">
+              {!isBackoffice && <Badge className="mb-2">{getArticleSource(article).name}</Badge>}
+              {getArticleSource(article).name !== 'JornalismoUBI' && <ExternalLink size={20} />}
+            </span>
+
             {/* Se a fonte for JornalismoUBI, utilizat Link interno, se não, utiliza anchor tag para link externo */}
             {getArticleSource(article).name === 'JornalismoUBI' ? (
               <Link to="/$articleId" params={{ articleId: article.id }}>
