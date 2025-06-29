@@ -6,7 +6,7 @@ export function Sidebar() {
   const location = useLocation()
 
   return (
-    <aside className="fixed left-0 top-16 h-screen w-64 bg-background border-r border-border z-30 p-4 overflow-y-auto">
+    <aside className="hidden sm:fixed sm:left-0 sm:top-16 sm:h-screen sm:w-64 sm:bg-background sm:border-r sm:border-border sm:z-30 sm:p-4 sm:overflow-y-auto sm:block">
       {location.pathname.startsWith('/admin') ? <BackofficeSidebar /> : <PublicSidebar />}
     </aside>
   )

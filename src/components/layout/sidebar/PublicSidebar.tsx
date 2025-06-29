@@ -15,11 +15,6 @@ export function PublicSidebar() {
     return `hsl(220, 80%, ${lightness}%)`
   }
 
-  const publicViews = [
-    { id: 'home', label: 'Todos os Artigos', icon: Home, path: '/' },
-    { id: 'fontes', label: 'Fontes', icon: Globe, path: '/fontes' },
-  ]
-
   const isActiveRoute = (path: string) => {
     if (path === '/' && location.pathname === '/') return true
     if (path !== '/' && location.pathname.startsWith(path)) return true
@@ -41,17 +36,18 @@ export function PublicSidebar() {
   return (
     <nav>
       <>
-        {publicViews.map((view) => {
-          const Icon = view.icon
-          return (
-            <Link key={view.id} to={view.path}>
-              <Button variant={isActiveRoute(view.path) ? 'default' : 'ghost'} className="w-full justify-start">
-                <Icon className="h-5 w-5 mr-3" />
-                {view.label}
-              </Button>
-            </Link>
-          )
-        })}
+        <Link to="/">
+          <Button variant={isActiveRoute('/') ? 'secondary' : 'ghost'} className="w-full justify-start">
+            <Home className="mr-3" />
+            Todos os Artigos
+          </Button>
+        </Link>
+        <Link to="/fontes">
+          <Button variant={isActiveRoute('/fontes') ? 'secondary' : 'ghost'} className="w-full justify-start">
+            <Globe className="mr-3" />
+            Fontes
+          </Button>
+        </Link>
       </>
       <div>
         <h3 className="text-sm font-semibold text-foreground mb-3 mt-4">Tags</h3>

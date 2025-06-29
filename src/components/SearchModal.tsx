@@ -15,7 +15,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[80vh] p-0">
+      <DialogContent className="w-full md:max-w-lg max-h-[80vh] p-0">
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="flex items-center text-xl font-bold">
             <Search className="mr-2 h-5 w-5" />
