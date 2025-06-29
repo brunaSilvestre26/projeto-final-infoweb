@@ -33,20 +33,6 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
   }
 
   const filteredArticles = isBackoffice ? internalArticles : articles
-  /**
-   * Se for writer:
-   * - Ver artigos aprovados escritos pelo writer -FEITO (falta filtrar)
-   * - Ver artigos pendentes escritos pelo writer -FEITO (falta filtrar)
-   * - Botão para editar artigo - FEITO
-   * - Botão para apagar artigo - FEITO
-   *
-   * Se for reviewer ou admin:
-   * - Ver artigos escritos por todos os writers
-   * - Ver artigos pendentes escritos por todos os writers
-   * - Botão para editar artigo
-   * - Botão para apagar artigo
-   */
-
   const deleteArticleMutation = useMutation({
     mutationFn: async (id: string) => {
       await supabase.from('article').delete().eq('id', id)
@@ -69,15 +55,20 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       {filteredArticles?.map((article) => (
         <Card className="group hover:shadow-lg transition-all duration-200 overflow-hidden" key={article.id}>
-          {article.image_url && (
-            <div className="aspect-video overflow-hidden -mt-6">
-              <img
-                src={article.image_url}
-                alt={article.title || 'Imagem do artigo'}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-              />
-            </div>
-          )}
+          <div className="relative">
+            {article.image_url && (
+              <div className="aspect-video overflow-hidden -mt-6">
+                <img
+                  src={article.image_url}
+                  alt={article.title || 'Imagem do artigo'}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                />
+                <span className="absolute top-0 ml-4">
+                  {!isBackoffice && <Badge className="mb-2">{getArticleSource(article).name}</Badge>}
+                </span>
+              </div>
+            )}
+          </div>
           <CardHeader>
             {isBackoffice && (
               <div className="flex justify-between items-center my-2">
@@ -142,12 +133,11 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
                 </div>
               </div>
             )}
-            <span className="flex items-center justify-between">
-              {!isBackoffice && <Badge className="mb-2">{getArticleSource(article).name}</Badge>}
+            <span className="ml-auto">
               {getArticleSource(article).name !== 'JornalismoUBI' && <ExternalLink size={20} />}
             </span>
 
-            {/* Se a fonte for JornalismoUBI, utilizat Link interno, se não, utiliza anchor tag para link externo */}
+            {/* Se a fonte for JornalismoUBI, utilizar Link interno, se não, utiliza anchor tag para link externo */}
             {getArticleSource(article).name === 'JornalismoUBI' ? (
               <Link to="/$articleId" params={{ articleId: article.id }}>
                 <CardTitle className="group-hover:text-primary mb-6">{article.title}</CardTitle>
