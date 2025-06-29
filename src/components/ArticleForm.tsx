@@ -574,7 +574,7 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
 
             <div className="flex justify-end space-x-4">
               <Button type="button" variant="outline" onClick={handleCancel}>
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" disabled={createArticleMutation.isPending || updateArticleMutation.isPending}>
                 <Save className="h-4 w-4" />
