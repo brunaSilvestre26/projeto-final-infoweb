@@ -14,11 +14,15 @@ export function MobileHeader() {
   return (
     <>
       <header className="bg-background border-b border-border fixed top-0 w-full z-50 flex items-center justify-between pl-6 h-16">
-        <Link className="flex items-center" to="/">
-          <img src="/logoJornalismoUBIpretoEazul.png" alt="Logo" className="h-7" />
-        </Link>
-
-        {location.pathname.startsWith('/admin') && <span className="text-muted-foreground">Backoffice</span>}
+        {location.pathname.startsWith('/admin') ? (
+          <Link className="flex items-center" to="/admin">
+            <img src="/logoJornalismoUBIbackoffice.png" alt="Logo" className="h-7" />
+          </Link>
+        ) : (
+          <Link className="flex items-center" to="/">
+            <img src="/logoJornalismoUBIpretoEazul.png" alt="Logo" className="h-7" />
+          </Link>
+        )}
 
         <div className="mr-4">
           {location.pathname.startsWith('/admin') ? <MobileBackofficeSidebar /> : <MobilePublicSidebar />}
@@ -26,28 +30,28 @@ export function MobileHeader() {
       </header>
       <footer className="bg-background border-t border-border fixed bottom-0 w-full z-50 flex items-center justify-evenly h-16">
         <Link to="/">
-          <House />
+          <House className={location.pathname === '/' ? 'text-primary' : ''} />
         </Link>
 
         <div>
-          <Search onClick={() => setOpenModal(true)} />
+          <Search onClick={() => setOpenModal(true)} className={openModal ? 'text-primary' : ''} />
           <SearchModal open={openModal} onOpenChange={setOpenModal} />
         </div>
 
         {/* Actions */}
         {user.data && (
           <Link to="/admin">
-            <FileCog className="cursor-pointer" />
+            <FileCog className={location.pathname.startsWith('/admin') ? 'text-primary' : ''} />
           </Link>
         )}
 
         {user.data ? (
-          <Link to="/profile">
-            <User />
+          <Link to="/perfil">
+            <User className={location.pathname === '/perfil' ? 'text-primary' : ''} />{' '}
           </Link>
         ) : (
           <Link to="/login">
-            <User />
+            <User className={location.pathname === '/login' ? 'text-primary' : ''} />
           </Link>
         )}
       </footer>

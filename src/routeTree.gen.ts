@@ -18,7 +18,7 @@ import { Route as AuthedImport } from './routes/_authed'
 import { Route as ArticleIdImport } from './routes/$articleId'
 import { Route as IndexImport } from './routes/index'
 import { Route as TagTagNameImport } from './routes/tag/$tagName'
-import { Route as AuthedProfileImport } from './routes/_authed/profile'
+import { Route as AuthedPerfilImport } from './routes/_authed/perfil'
 import { Route as AuthedAdminIndexImport } from './routes/_authed/admin/index'
 import { Route as AuthedAdminTagsImport } from './routes/_authed/admin/tags'
 import { Route as AuthedAdminFontesImport } from './routes/_authed/admin/fontes'
@@ -69,9 +69,9 @@ const TagTagNameRoute = TagTagNameImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthedProfileRoute = AuthedProfileImport.update({
-  id: '/profile',
-  path: '/profile',
+const AuthedPerfilRoute = AuthedPerfilImport.update({
+  id: '/perfil',
+  path: '/perfil',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -157,11 +157,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/_authed/profile': {
-      id: '/_authed/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthedProfileImport
+    '/_authed/perfil': {
+      id: '/_authed/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AuthedPerfilImport
       parentRoute: typeof AuthedImport
     }
     '/tag/$tagName': {
@@ -219,7 +219,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthedRouteChildren {
-  AuthedProfileRoute: typeof AuthedProfileRoute
+  AuthedPerfilRoute: typeof AuthedPerfilRoute
   AuthedAdminContasRoute: typeof AuthedAdminContasRoute
   AuthedAdminCriarRoute: typeof AuthedAdminCriarRoute
   AuthedAdminFontesRoute: typeof AuthedAdminFontesRoute
@@ -229,7 +229,7 @@ interface AuthedRouteChildren {
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedProfileRoute: AuthedProfileRoute,
+  AuthedPerfilRoute: AuthedPerfilRoute,
   AuthedAdminContasRoute: AuthedAdminContasRoute,
   AuthedAdminCriarRoute: AuthedAdminCriarRoute,
   AuthedAdminFontesRoute: AuthedAdminFontesRoute,
@@ -248,7 +248,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/fontes': typeof FontesRoute
   '/login': typeof LoginRoute
-  '/profile': typeof AuthedProfileRoute
+  '/perfil': typeof AuthedPerfilRoute
   '/tag/$tagName': typeof TagTagNameRoute
   '/admin/contas': typeof AuthedAdminContasRoute
   '/admin/criar': typeof AuthedAdminCriarRoute
@@ -265,7 +265,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/fontes': typeof FontesRoute
   '/login': typeof LoginRoute
-  '/profile': typeof AuthedProfileRoute
+  '/perfil': typeof AuthedPerfilRoute
   '/tag/$tagName': typeof TagTagNameRoute
   '/admin/contas': typeof AuthedAdminContasRoute
   '/admin/criar': typeof AuthedAdminCriarRoute
@@ -283,7 +283,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/fontes': typeof FontesRoute
   '/login': typeof LoginRoute
-  '/_authed/profile': typeof AuthedProfileRoute
+  '/_authed/perfil': typeof AuthedPerfilRoute
   '/tag/$tagName': typeof TagTagNameRoute
   '/_authed/admin/contas': typeof AuthedAdminContasRoute
   '/_authed/admin/criar': typeof AuthedAdminCriarRoute
@@ -302,7 +302,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/fontes'
     | '/login'
-    | '/profile'
+    | '/perfil'
     | '/tag/$tagName'
     | '/admin/contas'
     | '/admin/criar'
@@ -318,7 +318,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/fontes'
     | '/login'
-    | '/profile'
+    | '/perfil'
     | '/tag/$tagName'
     | '/admin/contas'
     | '/admin/criar'
@@ -334,7 +334,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/fontes'
     | '/login'
-    | '/_authed/profile'
+    | '/_authed/perfil'
     | '/tag/$tagName'
     | '/_authed/admin/contas'
     | '/_authed/admin/criar'
@@ -393,7 +393,7 @@ export const routeTree = rootRoute
     "/_authed": {
       "filePath": "_authed.tsx",
       "children": [
-        "/_authed/profile",
+        "/_authed/perfil",
         "/_authed/admin/contas",
         "/_authed/admin/criar",
         "/_authed/admin/fontes",
@@ -411,8 +411,8 @@ export const routeTree = rootRoute
     "/login": {
       "filePath": "login.tsx"
     },
-    "/_authed/profile": {
-      "filePath": "_authed/profile.tsx",
+    "/_authed/perfil": {
+      "filePath": "_authed/perfil.tsx",
       "parent": "/_authed"
     },
     "/tag/$tagName": {

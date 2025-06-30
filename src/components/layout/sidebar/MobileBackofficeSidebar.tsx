@@ -4,8 +4,11 @@ import { useGetRoleByIdQuery } from '@/hooks/roles'
 import { useGetUserByIdQuery, useGetUserQuery } from '@/hooks/user'
 import { Link, useLocation } from '@tanstack/react-router'
 import { FileText, Globe, Menu, Plus, Tag, User } from 'lucide-react'
+import { useState } from 'react'
 
 export const MobileBackofficeSidebar = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
   const location = useLocation()
   const user = useGetUserQuery()
   const userById = useGetUserByIdQuery(user.data?.id!)
@@ -37,8 +40,8 @@ export const MobileBackofficeSidebar = () => {
   }
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild onClick={() => setIsOpen(!isOpen)}>
         <Menu className="cursor-pointer" />
       </SheetTrigger>
 
@@ -46,7 +49,7 @@ export const MobileBackofficeSidebar = () => {
         <SheetHeader>
           <SheetTitle>
             <Link to="/">
-              <img src="/logoJornalismoUBIpretoEazul.png" alt="Logo" className="h-7" />
+              <img src="/logoJornalismoUBIbackoffice.png" alt="Logo" className="h-7" />
             </Link>
           </SheetTitle>
           <SheetDescription></SheetDescription>
@@ -55,7 +58,7 @@ export const MobileBackofficeSidebar = () => {
           {views.map((view) => {
             const Icon = view.icon
             return (
-              <Link key={view.id} to={view.path}>
+              <Link key={view.id} to={view.path} onClick={() => setIsOpen(false)}>
                 <Button variant={isActiveRoute(view.path) ? 'default' : 'ghost'} className="w-full justify-start">
                   <Icon className="h-5 w-5 mr-3" />
                   {view.label}

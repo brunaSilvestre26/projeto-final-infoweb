@@ -3,10 +3,12 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { useGetTagsQuery } from '@/hooks/tags'
 import { Link, useLocation } from '@tanstack/react-router'
 import { Globe, Home, Menu } from 'lucide-react'
+import { useState } from 'react'
 
 export const MobilePublicSidebar = () => {
   const location = useLocation()
   const tags = useGetTagsQuery()
+  const [isOpen, setIsOpen] = useState(false)
 
   function getBlueShade(index: number, total: number) {
     // Hue for blue is around 210-230, saturation 80%, lightness varies
@@ -35,28 +37,28 @@ export const MobilePublicSidebar = () => {
   }
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild onClick={() => setIsOpen(!isOpen)}>
         <Menu className="cursor-pointer" />
       </SheetTrigger>
 
       <SheetContent side="left" className="p-5 overflow-y-auto">
         <SheetHeader>
           <SheetTitle>
-            <Link to="/">
+            <Link to="/" onClick={() => setIsOpen(false)}>
               <img src="/logoJornalismoUBIpretoEazul.png" alt="Logo" className="h-7" />
             </Link>
           </SheetTitle>
           <SheetDescription></SheetDescription>
         </SheetHeader>
-        <Link to="/">
+        <Link to="/" onClick={() => setIsOpen(false)}>
           <Button variant={isActiveRoute('/') ? 'secondary' : 'ghost'} className="w-full justify-start">
             <Home className="mr-3" />
             Todos os Artigos
           </Button>
         </Link>
-        <Link to="/fontes">
-          <Button variant={isActiveRoute('/fontes') ? 'secondary' : 'ghost'} className="w-full justify-start">
+        <Link to="/fontes" onClick={() => setIsOpen(false)}>
+          <Button variant={isActiveRoute('/fontes') ? 'secondary' : 'ghost'} className="w-full justify-start -mt-2">
             <Globe className="mr-3" />
             Fontes
           </Button>
@@ -66,7 +68,7 @@ export const MobilePublicSidebar = () => {
           <h3 className=" font-semibold text-foreground mb-3 mt-3 sm:mt-4">Tags</h3>
           <div className="flex flex-col gap-2 sm:gap-1">
             {tags.data?.map((tag, idx) => (
-              <Link key={tag.id} to="" href={`/tag/${tag.slug}`}>
+              <Link key={tag.id} to="" href={`/tag/${tag.slug}`} onClick={() => setIsOpen(false)}>
                 <Button
                   variant={location.pathname === `/tag/${tag.slug}` ? 'secondary' : 'ghost'}
                   className="w-full justify-start"

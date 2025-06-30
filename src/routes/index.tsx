@@ -54,7 +54,11 @@ function Index() {
               <SelectGroup>
                 <SelectItem value="all">Todas as fontes</SelectItem>
                 <SelectItem value="JornalismoUBI">JornalismoUBI</SelectItem>
-                {sources.data?.map((source) => <SelectItem value={source.id}>{source.name}</SelectItem>)}
+                {sources.data?.map((source) => (
+                  <SelectItem key={source.id} value={source.id}>
+                    {source.name}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>

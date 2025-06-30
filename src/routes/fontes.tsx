@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetSourcesQuery } from '@/hooks/sources'
 import { createFileRoute } from '@tanstack/react-router'
 import { Globe, RefreshCw } from 'lucide-react'
@@ -18,6 +18,7 @@ function RouteComponent() {
               <div className="flex items-center space-x-2">
                 <Globe className="h-5 w-5 text-primary" />
                 <CardTitle className="text-lg">{source.name}</CardTitle>
+                <CardDescription></CardDescription>
               </div>
             </div>
           </CardHeader>

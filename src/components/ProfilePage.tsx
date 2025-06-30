@@ -91,7 +91,7 @@ export function ProfilePage() {
       queryClient.invalidateQueries({ queryKey: ['getUser'] })
       queryClient.invalidateQueries({ queryKey: ['userById'] })
       toast.success('Conta atualizada com sucesso')
-      navigate({ to: '/profile', reloadDocument: true })
+      navigate({ to: '/perfil', reloadDocument: true })
     },
     onError: (error) => {
       toast.error('Erro ao atualizar a conta', { description: error.message })
@@ -110,7 +110,9 @@ export function ProfilePage() {
               </Avatar>
             </div>
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight">{currentUser.data?.name}</h1>
+              <h1 className="text-3xl font-bold tracking-tight break-all max-w-xs sm:max-w-sm md:max-w-full">
+                {currentUser.data?.name}
+              </h1>
               <div className="flex items-center space-x-3">
                 <Badge variant="secondary">
                   <ShieldUser className="mr-1 h-3 w-3" />
@@ -290,6 +292,7 @@ export function ProfilePage() {
           </div>
           <Card>
             <CardContent>
+              <CardDescription></CardDescription>
               <>
                 <p className="text-lg font-medium mb-1">Permissões</p>
                 {getRoleById(currentUser.data?.role_id!) === 'Admin' && (

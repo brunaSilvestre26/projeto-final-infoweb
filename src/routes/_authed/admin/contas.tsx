@@ -1,5 +1,7 @@
 import { AccountManagement } from '@/components/AccountManagement'
+import { MobileAccountManagement } from '@/components/MobileAccountManagement'
 import { getRoleById } from '@/hooks/roles'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { getUser, getUserById } from '@/hooks/user'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
@@ -34,5 +36,11 @@ export const Route = createFileRoute('/_authed/admin/contas')({
 })
 
 function RouteComponent() {
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return <MobileAccountManagement />
+  }
+
   return <AccountManagement />
 }

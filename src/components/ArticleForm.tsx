@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useGetArticleByIdQuery } from '@/hooks/articles'
 import { useGetRoleByIdQuery } from '@/hooks/roles'
 import { useGetTagsQuery } from '@/hooks/tags'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useGetUserByIdQuery, useGetUserQuery, useGetUsersByAuthorsIdsQuery, useGetUsersQuery } from '@/hooks/user'
 import { supabase } from '@/supabase/supabase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -54,6 +55,7 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
   const userById = useGetUserByIdQuery(user.data?.id!)
   const currentUserRole = useGetRoleByIdQuery(userById.data?.role_id!)
   const users = useGetUsersQuery()
+  const isMobile = useIsMobile()
 
   // Fetch authors
 
@@ -325,7 +327,7 @@ export function ArticleForm({ isEditing, articleId }: ArticleFormProps) {
           <div className="flex items-center space-x-3">
             <Button type="button" variant="outline" onClick={() => setShowPreview(!showPreview)}>
               {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              {showPreview ? 'Editar' : 'Pré-visualizar'}
+              {!isMobile && <>{showPreview ? 'Editar' : 'Pré-visualizar'}</>}
             </Button>
             <Tooltip>
               <TooltipTrigger asChild>

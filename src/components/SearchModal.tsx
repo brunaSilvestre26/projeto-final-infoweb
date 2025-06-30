@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Search, X } from 'lucide-react'
 import { useState } from 'react'
@@ -21,6 +21,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
             <Search className="mr-2 h-5 w-5" />
             Pesquisar artigos
           </DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="px-6 pb-4 border-b">
           <div className="relative">

@@ -1,5 +1,7 @@
+import { MobileTagManagement } from '@/components/MobileTagManagement'
 import { TagManagement } from '@/components/TagManagement'
 import { getRoleById } from '@/hooks/roles'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { getUser, getUserById } from '@/hooks/user'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
@@ -34,5 +36,10 @@ export const Route = createFileRoute('/_authed/admin/tags')({
 })
 
 function RouteComponent() {
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return <MobileTagManagement />
+  }
   return <TagManagement />
 }
