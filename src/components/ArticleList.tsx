@@ -89,7 +89,6 @@ export const ArticleList = ({ articles, isBackoffice = false }: { articles: Arti
                     params={{ articleId: article.id }}
                     className="hover:scale-110 transform active:scale-100 transition-transform cursor-pointer"
                   >
-                    {/*TODO: edit article page*/}
                     <SquarePen size={20} />
                   </Link>
                   <AlertDialog

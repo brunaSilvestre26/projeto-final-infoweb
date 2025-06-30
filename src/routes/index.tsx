@@ -11,9 +11,6 @@ export const Route = createFileRoute('/')({
 })
 
 function Index() {
-  // TODO: Implement search functionality
-  // TODO: Implement pagination
-
   const [showFilters, setShowFilters] = useState(false)
   const [selectedSource, setSelectedSource] = useState<string | undefined>('all')
 
