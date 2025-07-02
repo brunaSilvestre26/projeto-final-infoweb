@@ -88,7 +88,6 @@ function RouteComponent() {
         )}
       </div>
       <h1 className="text-xl sm:text-3xl font-bold text-gray-900 self-start mb-4 ml-4">Gerir artigos</h1>
-
       <ArticleList isBackoffice={true} articles={filteredArticles} />
     </div>
   )

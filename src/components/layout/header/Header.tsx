@@ -47,7 +47,7 @@ export function Header() {
           </Button>
         )}
         {user.data ? (
-          <Link to="/profile">
+          <Link to="/perfil">
             <User className="h-5 w-5" />
           </Link>
         ) : (

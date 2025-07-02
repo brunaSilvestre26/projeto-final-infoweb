@@ -197,7 +197,7 @@ export function ProfilePage() {
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm" disabled={isLoggingOut} className="text-white">
                   <LogOut className="h-4 w-4" />
-                  {isLoggingOut ? 'Logging out...' : 'Logout'}
+                  {isLoggingOut ? 'Logging out...' : 'Terminar Sessão'}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -210,7 +210,7 @@ export function ProfilePage() {
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction onClick={handleLogout} className="bg-destructive hover:bg-destructive/80">
-                    Logout
+                    Terminar Sessão
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
