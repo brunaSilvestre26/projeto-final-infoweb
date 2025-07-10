@@ -15,64 +15,64 @@ import json
     except Exception as e:
         return f"Erro ao gerar resumo: {str(e)}" """
 
-def obter_urls_mais_recentes(sitemap_url, limite=8):
+def fetchMostRecentUrls(sitemap_url, limite=8):
     resp = requests.get(sitemap_url)
     soup = BeautifulSoup(resp.content, "xml")
     links = [loc.text for loc in soup.find_all("loc")]
     return links[::-1][:limite]
 
-def extrair_detalhes_artigo(url):
+def extractArticleDetails(url):
     try:
         resp = requests.get(url)
         soup = BeautifulSoup(resp.content, "html.parser")
 
         # Título no h2.blog-arc-heading
-        titulo_tag = soup.find("h2", class_="blog-arc-heading")
-        titulo = titulo_tag.get_text(strip=True) if titulo_tag else "Sem título"
+        titleH2 = soup.find("h2", class_="blog-arc-heading")
+        title = titleH2.get_text(strip=True) if titleH2 else "Sem título"
 
         # Autor(es)
-        autor_tag = soup.find("p", class_="blog-user")
-        autor = autor_tag.get_text(strip=True) if autor_tag else "Desconhecido"
+        authorParagraph = soup.find("p", class_="blog-user")
+        author = authorParagraph.get_text(strip=True) if authorParagraph else "Desconhecido"
 
         # Imagem (open graph)
-        imagem_div = soup.find("div", class_="blog-arc-cover")
-        imagem_url = ""
+        imageDiv = soup.find("div", class_="blog-arc-cover")
+        image_url = ""
 
-        if imagem_div:
-            img_tag = imagem_div.find("img")
-            if img_tag and img_tag.has_attr("src"):
-                imagem_url = img_tag["src"]
+        if imageDiv:
+            imgElement = imageDiv.find("img")
+            if imgElement and imgElement.has_attr("src"):
+                image_url = imgElement["src"]
 
-        # Corpo: apenas <p> que são filhos diretos da div com classe "single-col"
-        single_col_div = soup.find("div", class_="single-col")
-        if single_col_div:
+        # content: apenas <p> que são filhos diretos da div com classe "single-col"
+        singleColDiv = soup.find("div", class_="single-col")
+        if singleColDiv:
             # Encontra apenas os <p> que são filhos diretos
-            paragrafos = single_col_div.find_all("p", recursive=False)
-            corpo = " ".join(p.get_text(strip=True) for p in paragrafos)
+            paragraphs = singleColDiv.find_all("p", recursive=False)
+            content = " ".join(p.get_text(strip=True) for p in paragraphs)
         else:
-            corpo = ""
+            content = ""
 
         # Resumo com IA
-        # resumo = gerar_resumo(corpo)
+        # resumo = gerar_resumo(content)
         
-        if len(corpo) > 200:
-            resumo_temp = corpo[:200]
+        if len(content) > 200:
+            summaryTemp = content[:200]
             # Procura o próximo espaço após os 200 caracteres
-            prox_espaco = corpo[200:].find(" ")
-            if prox_espaco != -1:
-                resumo = corpo[:200 + prox_espaco].rstrip() + "..."
+            nextSpace = content[200:].find(" ")
+            if nextSpace != -1:
+                summary = content[:200 + nextSpace].rstrip() + "..."
             else:
-                resumo = resumo_temp.rstrip() + "..."
+                summary = summaryTemp.rstrip() + "..."
         else:
-            resumo = corpo
+            summary = content
 
         return {
-            "title": titulo,
+            "title": title,
             "url": url,
-            "image_url": imagem_url,
-            "author": autor,
-            "content": corpo,
-            "summary": resumo
+            "image_url": image_url,
+            "author": author,
+            "content": content,
+            "summary": summary
         }
 
     except Exception as e:
@@ -83,7 +83,7 @@ def extrair_detalhes_artigo(url):
 
 def main():
     sitemap_url = "https://rubi.ubi.pt/wp-sitemap-posts-post-1.xml"
-    urls = obter_urls_mais_recentes(sitemap_url)
+    urls = fetchMostRecentUrls(sitemap_url)
 
     artigos = []
 
@@ -91,7 +91,7 @@ def main():
 
     for url in urls:
         print(f"   ↪ {url}")
-        artigo = extrair_detalhes_artigo(url)
+        artigo = extractArticleDetails(url)
         if artigo:
             artigos.append(artigo)
 

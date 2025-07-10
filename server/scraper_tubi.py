@@ -23,95 +23,95 @@ import re
     except Exception as e:
         return f"Erro ao gerar resumo: {str(e)}" """
     
-def obter_urls_mais_recentes(sitemap_url, limite=8):
+def fetchMostRecentUrls(sitemap_url, limite=8):
     resp = requests.get(sitemap_url)
     soup = BeautifulSoup(resp.content, "xml")
     links = [loc.text for loc in soup.find_all("loc")]
     return links[-limite:]  # Pega os últimos N links (mais recentes)
 
 
-def extrair_detalhes_artigo_tubi(url):
+def extractTubiArticleDetails(url):
     try:
         resp = requests.get(url)
         soup = BeautifulSoup(resp.content, "html.parser")
 
         # Título
-        header_div = soup.find("div", class_="entry-header")
-        titulo_tag = header_div.find("h1", class_="entry-title") if header_div else None
-        titulo = titulo_tag.get_text(strip=True) if titulo_tag else "Sem título"
+        headerDiv = soup.find("div", class_="entry-header")
+        titleH1 = headerDiv.find("h1", class_="entry-title") if headerDiv else None
+        title = titleH1.get_text(strip=True) if titleH1 else "Sem título"
 
-        # Categorias
-        categorias = []
-        if header_div:
-            categorias = [span.get_text(strip=True) for span in header_div.find_all("span", class_="entry-category")]
+        # tags
+        tags = []
+        if headerDiv:
+            tags = [span.get_text(strip=True) for span in headerDiv.find_all("span", class_="entry-category")]
 
         # Corpo do conteúdo - múltiplos métodos de extração
-        corpo = ""
+        content = ""
         
         # Método 1: Tenta a classe original
-        content_div = soup.find("div", class_="entry-content-single")
-        if content_div:
-            paragrafos = content_div.find_all("p")
-            corpo = " ".join(p.get_text(strip=True) for p in paragrafos)
+        contentDiv = soup.find("div", class_="entry-content-single")
+        if contentDiv:
+            paragraphs = contentDiv.find_all("p")
+            content = " ".join(p.get_text(strip=True) for p in paragraphs)
         
         # Método 2: Se não encontrou conteúdo suficiente, tenta outras classes
-        if not corpo or len(corpo) < 50:
+        if not content or len(content) < 50:
             # Tenta outras classes possíveis
-            for class_name in ["entry-content", "vlog-content", "post-content"]:
-                content_div = soup.find("div", class_=class_name)
-                if content_div:
-                    paragrafos = content_div.find_all(["p", "div"])
-                    textos = []
-                    for p in paragrafos:
-                        texto = p.get_text(strip=True)
-                        if texto and len(texto) > 20 and not texto.startswith("http"):
-                            textos.append(texto)
-                    if textos:
-                        corpo = " ".join(textos)
+            for className in ["entry-content", "vlog-content", "post-content"]:
+                contentDiv = soup.find("div", class_=className)
+                if contentDiv:
+                    paragraphs = contentDiv.find_all(["p", "div"])
+                    texts = []
+                    for p in paragraphs:
+                        text = p.get_text(strip=True)
+                        if text and len(text) > 20 and not text.startswith("http"):
+                            texts.append(text)
+                    if texts:
+                        content = " ".join(texts)
                         break
         
         # Método 3: Fallback - procura por texto que contenha palavras-chave do artigo
-        if not corpo or len(corpo) < 50:
-            all_text = soup.get_text()
+        if not content or len(content) < 50:
+            allText = soup.get_text()
             # Procura por frases que contenham palavras do título
-            titulo_palavras = titulo.lower().split()[:3]  # Primeiras 3 palavras do título
-            sentences = all_text.split('.')
-            relevant_sentences = []
+            titleKeywords = title.lower().split()[:3]  # Primeiras 3 palavras do título
+            sentences = allText.split('.')
+            relevantSentences = []
             for sentence in sentences:
-                if any(palavra in sentence.lower() for palavra in titulo_palavras) and len(sentence.strip()) > 30:
-                    relevant_sentences.append(sentence.strip())
-                    if len(' '.join(relevant_sentences)) > 200:  
+                if any(keyword in sentence.lower() for keyword in titleKeywords) and len(sentence.strip()) > 30:
+                    relevantSentences.append(sentence.strip())
+                    if len(' '.join(relevantSentences)) > 200:  
                         break
-            if relevant_sentences:
-                corpo = ' '.join(relevant_sentences)
+            if relevantSentences:
+                content = ' '.join(relevantSentences)
         
-        print(f"Corpo extraído: {len(corpo)} caracteres")
+        print(f"Corpo extraído: {len(content)} caracteres")
 
         # Resumo com IA
         # resumo = gerar_resumo(corpo)
 
-        if len(corpo) > 200:
-            resumo_temp = corpo[:200]
+        if len(content) > 200:
+            summaryTemp = content[:200]
             # Procura o próximo espaço após os 200 caracteres
-            prox_espaco = corpo[200:].find(" ")
-            if prox_espaco != -1:
-                resumo = corpo[:200 + prox_espaco].rstrip() + "..."
+            nextSpace = content[200:].find(" ")
+            if nextSpace != -1:
+                summary = content[:200 + nextSpace].rstrip() + "..."
             else:
-                resumo = resumo_temp.rstrip() + "..."
+                summary = summaryTemp.rstrip() + "..."
         else:
-            resumo = corpo
+            summary = content
 
         # Vídeo
-        imagem_video = ""
-        video_url = ""
+        videoThumbnail = ""
+        videoUrl = ""
         
         # Tenta encontrar o iframe do YouTube de várias formas
         iframe = None
         
         # Método 1: Procura na div com classe específica
-        video_div = soup.find("div", class_="fluid-width-video-wrapper")
-        if video_div:
-            iframe = video_div.find("iframe")
+        videoDiv = soup.find("div", class_="fluid-width-video-wrapper")
+        if videoDiv:
+            iframe = videoDiv.find("iframe")
         
         # Método 2: Procura diretamente por iframe do YouTube
         if not iframe:
@@ -119,40 +119,40 @@ def extrair_detalhes_artigo_tubi(url):
         
         # Método 3: Procura qualquer iframe
         if not iframe:
-            all_iframes = soup.find_all("iframe")
-            for frame in all_iframes:
-                if frame.has_attr("src") and "youtube" in frame["src"]:
-                    iframe = frame
+            allIframes = soup.find_all("iframe")
+            for frameTemp in allIframes:
+                if frameTemp.has_attr("src") and "youtube" in frameTemp["src"]:
+                    iframe = frameTemp
                     break
         
         if iframe and iframe.has_attr("src"):
-            video_url = iframe["src"]
-            print(f"Vídeo encontrado: {video_url}")
+            videoUrl = iframe["src"]
+            print(f"Vídeo encontrado: {videoUrl}")
             
             # Extrai o ID do vídeo do YouTube
-            match = re.search(r"youtube\.com/embed/([^?&]+)", video_url)
+            match = re.search(r"youtube\.com/embed/([^?&]+)", videoUrl)
             if match:
-                video_id = match.group(1)
-                imagem_video = f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
-                print(f"Imagem de capa: {imagem_video}")
+                videoId = match.group(1)
+                videoThumbnail = f"https://img.youtube.com/vi/{videoId}/hqdefault.jpg"
+                print(f"Imagem de capa: {videoThumbnail}")
             else:
                 print(f"Não foi possível extrair o ID do vídeo do YouTube")
         else:
             print(f"Nenhum iframe de vídeo encontrado")
 
         # Se não encontrou imagem de vídeo, usa uma imagem padrão
-        if not imagem_video:
-            imagem_video = "https://tubi.ubi.pt/wp-content/uploads/2017/06/tubi_logo-1.png"
-            print(f"Usando imagem padrão: {imagem_video}")        
+        if not videoThumbnail:
+            videoThumbnail = "https://tubi.ubi.pt/wp-content/uploads/2017/06/tubi_logo-1.png"
+            print(f"Usando imagem padrão: {videoThumbnail}")        
 
         return {
-            "title": titulo,
+            "title": title,
             "url": url,
-            "tags": categorias,
-            "image_url": imagem_video,
-            "video_url": video_url,
-            "content": corpo,
-            "summary": resumo
+            "tags": tags,
+            "image_url": videoThumbnail,
+            "video_url": videoUrl,
+            "content": content,
+            "summary": summary
         }
 
     except Exception as e:
@@ -163,7 +163,7 @@ def extrair_detalhes_artigo_tubi(url):
 
 def main():
     sitemap_url = "https://tubi.ubi.pt/wp-sitemap-posts-post-1.xml"
-    urls = obter_urls_mais_recentes(sitemap_url)
+    urls = fetchMostRecentUrls(sitemap_url)
 
     artigos = []
 
@@ -171,7 +171,7 @@ def main():
 
     for url in urls:
         print(f"   ↪ {url}")
-        artigo = extrair_detalhes_artigo_tubi(url)
+        artigo = extractTubiArticleDetails(url)
         if artigo:
             artigos.append(artigo)
 
