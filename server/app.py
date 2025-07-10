@@ -12,7 +12,7 @@ CORS(app)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route('/run-script', methods=['POST'])
+@app.route('/run-scrape', methods=['POST'])
 def run_script():
     try:
         data = request.get_json()

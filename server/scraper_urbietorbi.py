@@ -7,9 +7,19 @@ from collections import defaultdict
 
 wantedTags = ["ubi", "regiao", "desporto", "cultura", "made-in-ubi", "opiniao", "reportagem"]
 
-aiSummarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+# Pipeline de sumarização com IA
+# aiSummarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
-# ---------- Funções ----------
+""" def generateSummary(text, max_tokens=130):
+    if not text or len(text.split()) < 30:
+        return "Texto muito curto para gerar um resumo."
+    
+    try:
+        summary = aiSummarizer(text[:1024], max_length=max_tokens, min_length=30, do_sample=False)
+        return summary[0]['summary_text']
+    except:
+        return "Erro ao gerar resumo." """
+
 
 def fetchTagPageUrls():
     url = "https://urbietorbi.ubi.pt/page-sitemap.xml"
@@ -58,18 +68,6 @@ def fetchArticlesByTag(tagUrl, limit=5):
     return articles
 
 
-
-def generateSummary(text, max_tokens=130):
-    if not text or len(text.split()) < 30:
-        return "Texto muito curto para gerar um resumo."
-    
-    try:
-        summary = aiSummarizer(text[:1024], max_length=max_tokens, min_length=30, do_sample=False)
-        return summary[0]['summary_text']
-    except:
-        return "Erro ao gerar resumo."
-
-
 def extractArticleDetails(url, tag):
     try:
         resp = requests.get(url)
@@ -101,8 +99,19 @@ def extractArticleDetails(url, tag):
                 break
 
 
-        # Gerar resumo
-        summary = generateSummary(content)
+        # Gerar resumo com IA
+        # summary = generateSummary(content)
+
+        if len(content) > 200:
+            summary_temp = content[:200]
+            # Procura o próximo espaço após os 200 caracteres
+            prox_espaco = content[200:].find(" ")
+            if prox_espaco != -1:
+                summary = content[:200 + prox_espaco].rstrip() + "..."
+            else:
+                summary = summary_temp.rstrip() + "..."
+        else:
+            summary = content
 
         return {
             "title": title,

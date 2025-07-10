@@ -3,23 +3,23 @@ from bs4 import BeautifulSoup
 from transformers import pipeline
 import json
 
-# Pipeline de sumarização
-aiSummarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+# Pipeline de sumarização com IA
+# aiSummarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
-def obter_urls_mais_recentes(sitemap_url, limite=8):
-    resp = requests.get(sitemap_url)
-    soup = BeautifulSoup(resp.content, "xml")
-    links = [loc.text for loc in soup.find_all("loc")]
-    return links[::-1][:limite]
-
-def gerar_resumo(texto, max_tokens=130):
+""" def gerar_resumo(texto, max_tokens=130):
     if not texto or len(texto.split()) < 30:
         return texto
     try:
         resumo = aiSummarizer(texto[:1024], max_length=max_tokens, min_length=30, do_sample=False)
         return resumo[0]['summary_text']
     except Exception as e:
-        return f"Erro ao gerar resumo: {str(e)}"
+        return f"Erro ao gerar resumo: {str(e)}" """
+
+def obter_urls_mais_recentes(sitemap_url, limite=8):
+    resp = requests.get(sitemap_url)
+    soup = BeautifulSoup(resp.content, "xml")
+    links = [loc.text for loc in soup.find_all("loc")]
+    return links[::-1][:limite]
 
 def extrair_detalhes_artigo(url):
     try:
@@ -52,8 +52,19 @@ def extrair_detalhes_artigo(url):
         else:
             corpo = ""
 
-        # Resumo
-        resumo = gerar_resumo(corpo)
+        # Resumo com IA
+        # resumo = gerar_resumo(corpo)
+        
+        if len(corpo) > 200:
+            resumo_temp = corpo[:200]
+            # Procura o próximo espaço após os 200 caracteres
+            prox_espaco = corpo[200:].find(" ")
+            if prox_espaco != -1:
+                resumo = corpo[:200 + prox_espaco].rstrip() + "..."
+            else:
+                resumo = resumo_temp.rstrip() + "..."
+        else:
+            resumo = corpo
 
         return {
             "title": titulo,

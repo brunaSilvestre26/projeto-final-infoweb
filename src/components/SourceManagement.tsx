@@ -33,7 +33,7 @@ export function SourceManagement() {
         throw new Error(error.message)
       }
 
-      const response = await fetch('http://localhost:5000/run-script', {
+      const response = await fetch('http://localhost:5000/run-scrape', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -197,7 +197,7 @@ export function ProfilePage() {
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm" disabled={isLoggingOut} className="text-white">
                   <LogOut className="h-4 w-4" />
-                  {isLoggingOut ? 'Logging out...' : 'Terminar Sessão'}
+                  {isLoggingOut ? 'A terminar sessão...' : 'Terminar Sessão'}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
